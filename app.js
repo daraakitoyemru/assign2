@@ -8,7 +8,8 @@ import {
 document.addEventListener("DOMContentLoaded", () => {
   const domain = "https://www.randyconnolly.com/funwebdev/3rd/api/f1/";
   const homeSection = document.querySelector("#homeView");
-  // i'll refactor this later. this happens as soon as the DOM loads.
+  // i'll refactor this later. this happens as soon as the DOM loads,
+  // it supposed to happen after a user selects a season
   Promise.all([
     writeToCache(domain + "races.php?", "raceData"),
     writeToCache(domain + "results.php?", "resultData"),
