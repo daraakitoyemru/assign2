@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>F1 Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>F1 Dashboard</h1>
+      <nav>
+        <button id="homeViewBtn">Home</button>
+        <button id="racesViewBtn">Races</button>
+      </nav>
+    </header>
+
+    <!-- Home View -->
+    <section id="homeView">
+      <h2>Welcome to the F1 Dashboard</h2>
+      <label for="seasonSelect">Select a Season:</label>
+      <select id="seasonSelect">
+        <!-- Options will be dynamically populated -->
+      </select>
+    </section>
+
+    <!-- Races View -->
+    <section id="racesView" style="display: none">
+      <h2>Races</h2>
+      <ul id="racesList">
+        <!-- Race data will be dynamically added here -->
+      </ul>
+    </section>
+
+    <!-- Modals -->
+    <dialog id="favoritesModal">
+      <h2>Favorites</h2>
+      <ul id="favoritesList">
+        <!-- Favorite items go here -->
+      </ul>
+      <button id="closeFavorites">Close</button>
+    </dialog>
+
+    <dialog id="driverModal">
+      <h2>Driver Details</h2>
+      <p id="driverDetails">Details about the driver will appear here.</p>
+      <button id="closeDriver">Close</button>
+    </dialog>
+
+    <dialog id="constructorModal">
+      <h2>Constructor Details</h2>
+      <p id="constructorDetails">
+        Details about the constructor will appear here.
+      </p>
+      <button id="closeConstructor">Close</button>
+    </dialog>
+
+    <dialog id="circuitModal">
+      <h2>Circuit Details</h2>
+      <p id="circuitDetails">Details about the circuit will appear here.</p>
+      <button id="closeCircuit">Close</button>
+    </dialog>
+
+    <script src="script.js"></script>
+  </body>
+</html>
