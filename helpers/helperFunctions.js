@@ -36,17 +36,15 @@ function readFromCache(key) {
 
 /**
  * Takes an object and maps it values so a single table row.
- * Still working on this function so dont use it yet.
- * @param {string} parentElementSelector
- * @param {array} data
+ *
+ * @param {string} parentElementSelector css selector for element
+ * @param {object} object object to iterated over
  */
-function addTableRow(parentElementSelector, data) {
+function addTableRow(parentElementSelector, object) {
   const parent = document.querySelector(parentElementSelector);
   const tr = document.createElement("tr");
 
-  let lastElem = data.length - 1;
-
-  Object.values(data[lastElem]).forEach((value) => {
+  Object.values(object).forEach((value) => {
     const td = document.createElement("td");
     td.textContent = value;
     tr.appendChild(td);
