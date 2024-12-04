@@ -34,6 +34,25 @@ function readFromCache(key) {
   return data ? JSON.parse(data) : null;
 }
 
+/**
+ * Takes an object and maps it values so a single table row.
+ *
+ * @param {string} parentElementSelector css selector for element
+ * @param {object} object object to iterated over
+ */
+function addTableRow(parentElementSelector, object) {
+  const parent = document.querySelector(parentElementSelector);
+  const tr = document.createElement("tr");
+
+  Object.values(object).forEach((value) => {
+    const td = document.createElement("td");
+    td.textContent = value;
+    tr.appendChild(td);
+  });
+
+  parent.appendChild(tr);
+}
+
 function getExistingElement(selector, isNodeList = false) {
   if (isNodeList) {
     return document.querySelectorAll(selector);
