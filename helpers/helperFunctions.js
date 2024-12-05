@@ -61,4 +61,10 @@ function getExistingElement(selector, isNodeList = false) {
   }
 }
 
-export { modifyStyle, getExistingElement, writeToCache, readFromCache };
+export {
+  modifyStyle,
+  getExistingElement,
+  writeToCache,
+  readFromCache,
+  addTableRow,
+};
