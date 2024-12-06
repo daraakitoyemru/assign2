@@ -139,6 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
   raceView.addEventListener("click", populateQualifying);
 
   function populateQualifying(e) {
+    document.querySelector("#qualifyingTable tbody").replaceChildren();
     if (e.target.nodeName === "A") {
       const year = e.target.dataset.year;
       const raceID = e.target.dataset.id;
