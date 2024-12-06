@@ -19,7 +19,7 @@ async function writeToCache(url, key) {
   try {
     let res = await fetch(url);
     let data = await res.json();
-    localStorage.setItem(key, JSON.Stringify(data));
+    localStorage.setItem(key, JSON.stringify(data));
   } catch (error) {
     console.error("Error fetching data: " + error);
   }

@@ -27,6 +27,16 @@
         <option value="2023">2023</option>
       </select>
     </section>
+    <div class="lds-roller loading">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
 
     <div class="container">
       <!-- Races View -->
@@ -49,7 +59,7 @@
       <!-- style="display: none" -->
 
       <!-- Qualifying Table -->
-      <section id="qualifyingTable">
+      <section id="qualifyingTable" style="display: none">
         <h2>Qualifying Results</h2>
         <table>
           <thead>
@@ -68,19 +78,20 @@
         </table>
       </section>
     </div>
+
     <!-- Modals -->
     <dialog id="favoritesModal">
       <h2>Favorites</h2>
       <ul id="favoritesList">
         <!-- Favorite items go here -->
       </ul>
-      <button id="closeFavorites">Close</button>
+      <button id="closeFavorites" class="close">Close</button>
     </dialog>
 
     <dialog id="driverModal">
       <h2>Driver Details</h2>
       <p id="driverDetails">Details about the driver will appear here.</p>
-      <button id="closeDriver">Close</button>
+      <button id="closeDriver" class="close">Close</button>
     </dialog>
 
     <dialog id="constructorModal">
@@ -88,13 +99,13 @@
       <p id="constructorDetails">
         Details about the constructor will appear here.
       </p>
-      <button id="closeConstructor">Close</button>
+      <button id="closeConstructor" class="close">Close</button>
     </dialog>
 
     <dialog id="circuitModal">
       <h2>Circuit Details</h2>
       <p id="circuitDetails">Details about the circuit will appear here.</p>
-      <button id="closeCircuit">Close</button>
+      <button id="closeCircuit" class="close">Close</button>
     </dialog>
   </body>
 </html>

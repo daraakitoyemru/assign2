@@ -6,6 +6,9 @@ import {
 } from "./helpers/helperFunctions.js";
 
 const domain = "https://www.randyconnolly.com/funwebdev/3rd/api/f1/";
+const keyList = ["raceData", "resultData", "qualifyingData"];
+const queryList = ["races.php?", "results.php?", "qualifying.php?"];
+
 /**
  * Checks if a key exists in localStorage. If it doesn't it will fetch data from the domain
  * and save it in localStorage with the given key name
@@ -54,7 +57,6 @@ function addTableRow(parentElementSelector, object, propArr) {
   const parent = document.querySelector(parentElementSelector);
   const tr = document.createElement("tr");
 
-  console.log(propArr);
   propArr.forEach((property) => {
     const td = document.createElement("td");
     if (typeof property === "object") {
@@ -86,19 +88,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const homeSection = document.querySelector("#homeView");
   const raceViewTitle = document.querySelector("#racesView h2");
   const raceView = document.querySelector("#racesView");
+  const qualifyingTable = document.querySelector("#qualifyingTable");
+  const driverModal = document.querySelector("#driverModal");
+  const dialog = document.querySelector("dialog");
+  const closeButton = document.querySelector(".close");
+  let viewDriver;
 
-  const keyList = ["raceData", "resultData", "qualifyingData"];
-  const queryList = ["races.php?", "results.php?", "qualifying.php?"];
-  let viewRaceLink;
+  modifyStyle(".lds-roller", "display", "none");
 
   /*
   TODO for event listener below:
     1. Hide home view on click
-    2. Show loading animation (show before promise.all)
-    3. Hide loading animation (after promise.all? (not sure))
+    2. Show loading animation (show before promise.all) - done
+    3. Hide loading animation (after promise.all? (not sure)) - done
     4. clean this event listener up
 */
   homeSection.addEventListener("click", async (e) => {
+    modifyStyle(".lds-roller", "display", "block");
     document.querySelector("#racesBody").replaceChildren();
     if (e.target.nodeName === "OPTION") {
       let year = e.target.value;
@@ -112,7 +118,8 @@ document.addEventListener("DOMContentLoaded", () => {
           "qualifying.php?season=" + year
         ),
       ]);
-
+      modifyStyle(".lds-roller", "display", "none");
+      modifyStyle("#racesView", "display", "block");
       const raceData = localStorageMembers[0];
 
       raceViewTitle.textContent = `Races for ${year}`;
@@ -131,8 +138,6 @@ document.addEventListener("DOMContentLoaded", () => {
         );
         addTableRow("#racesBody", raceObj, ["round", "name", link]);
       });
-      // shows table, hover over for instruction on how to use it
-      modifyStyle("#racesView", "display", "block");
     }
   });
 
@@ -154,6 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
           href: "#",
           id: "viewDriver",
         };
+        viewDriver = document.querySelector("#viewDriver");
         const constructorAttributes = {
           "data-constructor-id": matchObj.constructor["id"],
           "data-constructor-ref": matchObj.constructor["ref"],
@@ -170,7 +176,6 @@ document.addEventListener("DOMContentLoaded", () => {
           constructorAttributes,
           `${matchObj.constructor.name}`
         );
-        console.log(matchObj.position);
 
         addTableRow("#qualifyingTable tbody", matchObj, [
           "position",
@@ -181,6 +186,22 @@ document.addEventListener("DOMContentLoaded", () => {
           "q3",
         ]);
       });
+      modifyStyle("#qualifyingTable", "display", "block");
     }
   }
+
+  qualifyingTable.addEventListener("click", (e) => {
+    if (e.target.nodeName === "A" && e.target.id === "viewDriver") {
+      driverModal.showModal();
+    }
+  });
+
+  /** TODO: create a function that add event listener to all dialog boxes for opening and closing
+   * Also make one for populating modal based on different criteria, you'll call this in event listener above
+   */
+  driverModal.addEventListener("click", (e) => {
+    if (e.target.className === "close") {
+      driverModal.close();
+    }
+  });
 });
