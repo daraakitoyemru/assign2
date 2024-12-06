@@ -1,8 +1,8 @@
 /**
  * This modifies a single style property for a given element
- * @param {string} selector css selector for element
- * @param {string} styleType css property to be modified
- * @param {string} property value of css property
+ * @param {String} selector css selector for element
+ * @param {String} styleType css property to be modified
+ * @param {String} property value of css property
  */
 function modifyStyle(selector, styleType, property) {
   const element = document.querySelector(selector);
@@ -12,21 +12,21 @@ function modifyStyle(selector, styleType, property) {
 /**
  * An asynchronous function that fetches data from a source and saves it to local
  * storage.
- * @param {string} url url containing data
- * @param {string} key given key name
+ * @param {String} url url containing data
+ * @param {String} key given key name
  */
 async function writeToCache(url, key) {
   try {
     let res = await fetch(url);
     let data = await res.json();
-    localStorage.setItem(key, JSON.stringify(data));
+    localStorage.setItem(key, JSON.Stringify(data));
   } catch (error) {
     console.error("Error fetching data: " + error);
   }
 }
 /**
  * A function that reads from localStorage and checks if the given key exists
- * @param {string} key key that is searched for in local storage
+ * @param {String} key key that is searched for in local storage
  * @returns Array of object if key exists in localStorage, null otherwise
  */
 function readFromCache(key) {
@@ -37,8 +37,8 @@ function readFromCache(key) {
 /**
  * Takes an object and maps it values so a single table row.
  *
- * @param {string} parentElementSelector css selector for element
- * @param {object} object object to iterated over
+ * @param {String} parentElementSelector css selector for element
+ * @param {Object} object object to iterated over
  */
 function addTableRow(parentElementSelector, object) {
   const parent = document.querySelector(parentElementSelector);
