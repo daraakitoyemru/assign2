@@ -54,3 +54,8 @@ dialog button {
 dialog button:hover {
   background: #666;
 }
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}

@@ -28,23 +28,46 @@
       </select>
     </section>
 
-    <!-- Races View -->
-    <section id="racesView" style="display: none">
-      <h2>Races</h2>
-      <table id="racesTable">
-        <thead>
-          <tr>
-            <th>Round</th>
-            <th>Race Name</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="racesBody">
-          <!-- Race rows will be dynamically added here -->
-        </tbody>
-      </table>
-    </section>
+    <div class="container">
+      <!-- Races View -->
+      <section id="racesView" style="display: none">
+        <h2>Races</h2>
+        <table id="racesTable">
+          <thead>
+            <tr>
+              <th>Round</th>
+              <th>Race Name</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="racesBody">
+            <!-- Race rows will be dynamically added here -->
+          </tbody>
+        </table>
+      </section>
 
+      <!-- style="display: none" -->
+
+      <!-- Qualifying Table -->
+      <section id="qualifyingTable">
+        <h2>Qualifying Results</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th>Driver</th>
+              <th>Constructor</th>
+              <th>Q1</th>
+              <th>Q2</th>
+              <th>Q3</th>
+            </tr>
+          </thead>
+          <tbody id="#qualBody">
+            <!-- Dynamically add rows -->
+          </tbody>
+        </table>
+      </section>
+    </div>
     <!-- Modals -->
     <dialog id="favoritesModal">
       <h2>Favorites</h2>
