@@ -86,6 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
    */
 
   const homeSection = document.querySelector("#homeView");
+  const seasonSelect = document.querySelector("#seasonSelect");
   const raceViewTitle = document.querySelector("#racesView h2");
   const raceView = document.querySelector("#racesView");
   const qualifyingTable = document.querySelector("#qualifyingTable");
