@@ -86,6 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
    */
 
   const homeSection = document.querySelector("#homeView");
+  const seasonSelect = document.querySelector("#seasonSelect");
   const raceViewTitle = document.querySelector("#racesView h2");
   const raceView = document.querySelector("#racesView");
   const qualifyingTable = document.querySelector("#qualifyingTable");
@@ -103,11 +104,11 @@ document.addEventListener("DOMContentLoaded", () => {
     3. Hide loading animation (after promise.all? (not sure)) - done
     4. clean this event listener up
 */
-  homeSection.addEventListener("click", async (e) => {
-    modifyStyle(".lds-roller", "display", "block");
-    document.querySelector("#racesBody").replaceChildren();
-    if (e.target.nodeName === "OPTION") {
-      let year = e.target.value;
+  homeSection.addEventListener("change", async (e) => {
+    if (e.target.nodeName === "SELECT" && e.target.id === "seasonSelect") {
+      modifyStyle(".lds-roller", "display", "block");
+      document.querySelector("#racesBody").replaceChildren();
+      const year = e.target.value;
       //fetching and/or populating localStorage
       const localStorageMembers = await Promise.all([
         checkLocalStorage(`raceData${year}`, "races.php?season=" + year),
