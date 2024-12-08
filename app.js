@@ -105,6 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
 */
   homeSection.addEventListener("click", async (e) => {
     modifyStyle(".lds-roller", "display", "block");
+    modifyStyle("#qualifyingTable", "display", "none");
     document.querySelector("#racesBody").replaceChildren();
     if (e.target.nodeName === "OPTION") {
       let year = e.target.value;
