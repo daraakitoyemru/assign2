@@ -104,6 +104,12 @@ document.addEventListener("DOMContentLoaded", () => {
     3. Hide loading animation (after promise.all? (not sure)) - done
     4. clean this event listener up
 */
+  // document.addEventListener("click" (e) => {
+  //   if (e.target.nodeName === "A" && e.target.id === "viewDriver") {
+  //     driverModal.showModal();
+  //   }
+  // });
+
   homeSection.addEventListener("change", async (e) => {
     if (e.target.nodeName === "SELECT" && e.target.id === "seasonSelect") {
       modifyStyle(".lds-roller", "display", "block");
@@ -121,6 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ]);
       modifyStyle(".lds-roller", "display", "none");
       modifyStyle("#racesView", "display", "block");
+      homeSection.style.display = "none";
       const raceData = localStorageMembers[0];
 
       raceViewTitle.textContent = `Races for ${year}`;

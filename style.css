@@ -146,6 +146,12 @@ nav button:hover {
   transition: all 0.2s ease-in-out;
 }
 
+.car-photo {
+  padding: 20px;
+  width: 50%;
+  border-radius: 30px;
+}
+
 #racesView {
   flex: 1;
   max-width: 500px;
