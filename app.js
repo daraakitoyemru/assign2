@@ -261,12 +261,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function populateDriverCard(data) {
-    /**
-     * get driver fname lname
-     * get nationality
-     * get dob, calc age
-     * get url
-     */
     const driverName = document.querySelector(".driverName");
     const nationality = document.querySelector(".nationality");
     const dob = document.querySelector(".driverDOB");
@@ -277,6 +271,9 @@ document.addEventListener("DOMContentLoaded", () => {
       driverName.textContent = `${d.forename} ${d.surname}`;
       nationality.textContent = `Nationality: ${d.nationality}`;
       dob.textContent = `DOB: ${d.dob}`;
+      url.addEventListener("click", () => {
+        window.open(`${d.url}`, "_blank");
+      });
     });
   }
 });
