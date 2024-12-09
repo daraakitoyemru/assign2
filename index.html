@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>F1 Dashboard</title>
     <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+      integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer" />
     <script type="module" src="app.js"></script>
   </head>
   <body>
@@ -91,7 +97,46 @@
     <dialog id="driverModal">
       <h2>Driver Details</h2>
       <p id="driverDetails">Details about the driver will appear here.</p>
+     
+      <div class="container" style="display: none">
+        <div class="card profile">
+          <img
+            src="https://placehold.co/200x200"
+            alt="John"
+            style="width: 100%" />
+          <h2 class="driverName">FirstName LastName</h2>
+          <p class="title nationality">Nationality: Location</p>
+          <p class="driverDOB">DOB: YYYY-MM-DD (age: XX)</p>
+
+          <p><button class="contact wiki">Go to Wiki</button></p>
+        </div>
+
+        <div class="card table">
+          <table class="scrollTable">
+            <thead>
+              <tr>
+                <th>Round</th>
+                <th>Name</th>
+                <th>Pos</th>
+                <th>Points</th>
+              </tr>
+            </thead>
+            <tbody id="driverResultsTable">
+              <!-- Dynamically add rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
       <button id="closeDriver" class="close">Close</button>
+      <div class="lds-roller loading modal">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
     </dialog>
 
     <dialog id="constructorModal">
@@ -99,6 +144,7 @@
       <p id="constructorDetails">
         Details about the constructor will appear here.
       </p>
+      <div class="card"></div>
       <button id="closeConstructor" class="close">Close</button>
     </dialog>
 

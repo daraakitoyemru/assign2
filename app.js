@@ -6,8 +6,6 @@ import {
 } from "./helpers/helperFunctions.js";
 
 const domain = "https://www.randyconnolly.com/funwebdev/3rd/api/f1/";
-const keyList = ["raceData", "resultData", "qualifyingData"];
-const queryList = ["races.php?", "results.php?", "qualifying.php?"];
 
 /**
  * Checks if a key exists in localStorage. If it doesn't it will fetch data from the domain
@@ -94,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const dialog = document.querySelector("dialog");
   const closeButton = document.querySelector(".close");
   let viewDriver;
-
+  let year;
   modifyStyle(".lds-roller", "display", "none");
 
   /*
@@ -109,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
     modifyStyle("#qualifyingTable", "display", "none");
     document.querySelector("#racesBody").replaceChildren();
     if (e.target.nodeName === "OPTION") {
-      let year = e.target.value;
+      year = e.target.value;
       //fetching and/or populating localStorage
       const localStorageMembers = await Promise.all([
         checkLocalStorage(`raceData${year}`, "races.php?season=" + year),
@@ -158,6 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const driverAttributes = {
           "data-driver-id": matchObj.driver["id"],
           "data-driver-ref": matchObj.driver["ref"],
+          "data-race-year": matchObj.race["year"],
           href: "#",
           id: "viewDriver",
         };
@@ -165,6 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const constructorAttributes = {
           "data-constructor-id": matchObj.constructor["id"],
           "data-constructor-ref": matchObj.constructor["ref"],
+          "data-race-year": matchObj.race["year"],
           href: "#",
           id: "viewConstructors",
         };
@@ -192,9 +192,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  qualifyingTable.addEventListener("click", (e) => {
+  qualifyingTable.addEventListener("click", async (e) => {
     if (e.target.nodeName === "A" && e.target.id === "viewDriver") {
-      driverModal.showModal();
+      const driverRef = e.target.dataset.driverRef;
+      let [driverResultsData, driverInfo] = await Promise.all([
+        checkLocalStorage(
+          `driverResults${year}`,
+          `driverResults.php?driver=${driverRef}&season=${year}`
+        ),
+        checkLocalStorage(`driverInfo`, `drivers.php?`),
+      ]);
+      modifyStyle(".modal", "display", "none");
+      modifyStyle("#driverModal .container", "display", "flex");
+      populateDriverModal(driverModal, driverRef, year);
     }
   });
 
@@ -206,4 +216,54 @@ document.addEventListener("DOMContentLoaded", () => {
       driverModal.close();
     }
   });
+
+  function populateDriverModal(modal, ref, year) {
+    modal.showModal();
+    /**
+     * use find for getting data from driverResults?driver=ref&season=year
+     *  grab resultID,
+     */
+    let driverInfo = readFromCache("driverInfo");
+    let driverResultsData = readFromCache(`driverResults${year}`);
+
+    let driver = driverInfo.find((data) => data.driverRef == ref);
+
+    populateDriverCard(driver);
+
+    let resultDataForYear = readFromCache(`resultData${year}`);
+    let resultData;
+
+    driverResultsData.forEach((data) => {
+      let resultID = data.resultId;
+      resultData = resultDataForYear.filter((r) => r.id == resultID);
+      let points = resultData[0].points;
+      let pointsTextNode = document.createTextNode(points);
+      addTableRow("#driverResultsTable", data, [
+        "round",
+        "name",
+        "positionOrder",
+        pointsTextNode,
+      ]);
+    });
+  }
+
+  function populateDriverCard(data) {
+    /**
+     * get driver fname lname
+     * get nationality
+     * get dob, calc age
+     * get url
+     */
+    const driverName = document.querySelector(".driverName");
+    const nationality = document.querySelector(".nationality");
+    const dob = document.querySelector(".driverDOB");
+    const url = document.querySelector(".wiki");
+    data = [data];
+
+    data.forEach((d) => {
+      driverName.textContent = `${d.forename} ${d.surname}`;
+      nationality.textContent = `Nationality: ${d.nationality}`;
+      dob.textContent = `DOB: ${d.dob}`;
+    });
+  }
 });
