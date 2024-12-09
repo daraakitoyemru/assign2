@@ -117,6 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
       modifyStyle(".lds-roller", "display", "block");
       document.querySelector("#racesBody").replaceChildren();
       const year = e.target.value;
+
       //fetching and/or populating localStorage
       const localStorageMembers = await Promise.all([
         checkLocalStorage(`raceData${year}`, "races.php?season=" + year),
@@ -133,6 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const raceData = localStorageMembers[0];
 
       raceViewTitle.textContent = `Races for ${year}`;
+      raceViewTitle.setAttribute("data-year", year);
 
       //populating racesBody table
       raceData.forEach((raceObj) => {
@@ -205,6 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
   qualifyingTable.addEventListener("click", async (e) => {
     if (e.target.nodeName === "A" && e.target.id === "viewDriver") {
       const driverRef = e.target.dataset.driverRef;
+      const year = raceViewTitle.dataset.year;
       let [driverResultsData, driverInfo] = await Promise.all([
         checkLocalStorage(
           `driverResults${year}`,
