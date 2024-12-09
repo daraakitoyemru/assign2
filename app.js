@@ -99,9 +99,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   modifyStyle(".lds-roller", "display", "none");
 
+  addDialogEventListeners();
+
   /*
   TODO for event listener below:
-    1. Hide home view on click
+    1. Hide home view on click - done
     2. Show loading animation (show before promise.all) - done
     3. Hide loading animation (after promise.all? (not sure)) - done
     4. clean this event listener up
@@ -216,4 +218,52 @@ document.addEventListener("DOMContentLoaded", () => {
       driverModal.close();
     }
   });
+
+  function addDialogEventListeners() {
+    const dialogs = document.querySelectorAll("dialog");
+
+    dialogs.forEach((dialog) => {
+      const dialogId = dialog.id;
+
+      const openButtons = document.querySelectorAll(
+        `[data-dialog-target="${dialogId}"]`
+      );
+
+      openButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const data = {
+            Title: button.dataset.title || "No title available",
+            Description:
+              button.dataset.description || "No description provided",
+            AdditionalInfo: button.dataset.additional || "N/A",
+          };
+
+          populateModal(dialog, data);
+          dialog.showModal();
+        });
+      });
+
+      const closeButton = dialog.querySelector(".close");
+      if (closeButton) {
+        closeButton.addEventListener("click", () => {
+          dialog.close();
+        });
+      }
+    });
+  }
+
+  /**
+   * @param {HTMLElement} modal The modal element to populate.
+   * @param {Object} data Data object to populate modal content.
+   */
+  function populateModal(modal, data) {
+    const contentElement = modal.querySelector("p");
+    contentElement.innerHTML = "";
+
+    Object.entries(data).forEach(([key, value]) => {
+      const contentRow = document.createElement("p");
+      contentRow.innerHTML = `<strong>${key}:</strong> ${value}`;
+      contentElement.appendChild(contentRow);
+    });
+  }
 });
