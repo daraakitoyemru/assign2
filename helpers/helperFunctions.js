@@ -1,13 +1,4 @@
-/**
- * This modifies a single style property for a given element
- * @param {String} selector css selector for element
- * @param {String} styleType css property to be modified
- * @param {String} property value of css property
- */
-function modifyStyle(selector, styleType, property) {
-  const element = document.querySelector(selector);
-  element.style[styleType] = property;
-}
+/**-------------------------------------------DATA RETRIEVAL HELPER FUNCTIONS------------------- */
 
 /**
  * An asynchronous function that fetches data from a source and saves it to local
@@ -32,6 +23,19 @@ async function writeToCache(url, key) {
 function readFromCache(key) {
   let data = localStorage.getItem(key);
   return data ? JSON.parse(data) : null;
+}
+
+/** ------------------------------------MARKUP HELPER FUNCTION----------------------------- */
+
+/**
+ * This modifies a single style property for a given element
+ * @param {String} selector css selector for element
+ * @param {String} styleType css property to be modified
+ * @param {String} property value of css property
+ */
+function modifyStyle(selector, styleType, property) {
+  const element = document.querySelector(selector);
+  element.style[styleType] = property;
 }
 
 /**

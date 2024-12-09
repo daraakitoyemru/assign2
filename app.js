@@ -6,8 +6,6 @@ import {
 } from "./helpers/helperFunctions.js";
 
 const domain = "https://www.randyconnolly.com/funwebdev/3rd/api/f1/";
-const keyList = ["raceData", "resultData", "qualifyingData"];
-const queryList = ["races.php?", "results.php?", "qualifying.php?"];
 
 /**
  * Checks if a key exists in localStorage. If it doesn't it will fetch data from the domain
@@ -96,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const homeViewBtn = document.getElementById("homeViewBtn");
   const racesViewBtn = document.getElementById("racesViewBtn");
   let viewDriver;
-
+  let year;
   modifyStyle(".lds-roller", "display", "none");
 
   addDialogEventListeners();
@@ -170,6 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const driverAttributes = {
           "data-driver-id": matchObj.driver["id"],
           "data-driver-ref": matchObj.driver["ref"],
+          "data-race-year": matchObj.race["year"],
           href: "#",
           id: "viewDriver",
         };
@@ -177,6 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const constructorAttributes = {
           "data-constructor-id": matchObj.constructor["id"],
           "data-constructor-ref": matchObj.constructor["ref"],
+          "data-race-year": matchObj.race["year"],
           href: "#",
           id: "viewConstructors",
         };
@@ -204,9 +204,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  qualifyingTable.addEventListener("click", (e) => {
+  qualifyingTable.addEventListener("click", async (e) => {
     if (e.target.nodeName === "A" && e.target.id === "viewDriver") {
-      driverModal.showModal();
+      const driverRef = e.target.dataset.driverRef;
+      let [driverResultsData, driverInfo] = await Promise.all([
+        checkLocalStorage(
+          `driverResults${year}`,
+          `driverResults.php?driver=${driverRef}&season=${year}`
+        ),
+        checkLocalStorage(`driverInfo`, `drivers.php?`),
+      ]);
+      modifyStyle(".modal", "display", "none");
+      modifyStyle("#driverModal .container", "display", "flex");
+      populateDriverModal(driverModal, driverRef, year);
     }
   });
 
@@ -219,51 +229,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  function addDialogEventListeners() {
-    const dialogs = document.querySelectorAll("dialog");
+  function populateDriverModal(modal, ref, year) {
+    modal.showModal();
+    /**
+     * use find for getting data from driverResults?driver=ref&season=year
+     *  grab resultID,
+     */
+    let driverInfo = readFromCache("driverInfo");
+    let driverResultsData = readFromCache(`driverResults${year}`);
 
-    dialogs.forEach((dialog) => {
-      const dialogId = dialog.id;
+    let driver = driverInfo.find((data) => data.driverRef == ref);
 
-      const openButtons = document.querySelectorAll(
-        `[data-dialog-target="${dialogId}"]`
-      );
+    populateDriverCard(driver);
 
-      openButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          const data = {
-            Title: button.dataset.title || "No title available",
-            Description:
-              button.dataset.description || "No description provided",
-            AdditionalInfo: button.dataset.additional || "N/A",
-          };
+    let resultDataForYear = readFromCache(`resultData${year}`);
+    let resultData;
 
-          populateModal(dialog, data);
-          dialog.showModal();
-        });
-      });
-
-      const closeButton = dialog.querySelector(".close");
-      if (closeButton) {
-        closeButton.addEventListener("click", () => {
-          dialog.close();
-        });
-      }
+    driverResultsData.forEach((data) => {
+      let resultID = data.resultId;
+      resultData = resultDataForYear.filter((r) => r.id == resultID);
+      let points = resultData[0].points;
+      let pointsTextNode = document.createTextNode(points);
+      addTableRow("#driverResultsTable", data, [
+        "round",
+        "name",
+        "positionOrder",
+        pointsTextNode,
+      ]);
     });
   }
 
-  /**
-   * @param {HTMLElement} modal The modal element to populate.
-   * @param {Object} data Data object to populate modal content.
-   */
-  function populateModal(modal, data) {
-    const contentElement = modal.querySelector("p");
-    contentElement.innerHTML = "";
+  function populateDriverCard(data) {
+    /**
+     * get driver fname lname
+     * get nationality
+     * get dob, calc age
+     * get url
+     */
+    const driverName = document.querySelector(".driverName");
+    const nationality = document.querySelector(".nationality");
+    const dob = document.querySelector(".driverDOB");
+    const url = document.querySelector(".wiki");
+    data = [data];
 
-    Object.entries(data).forEach(([key, value]) => {
-      const contentRow = document.createElement("p");
-      contentRow.innerHTML = `<strong>${key}:</strong> ${value}`;
-      contentElement.appendChild(contentRow);
+    data.forEach((d) => {
+      driverName.textContent = `${d.forename} ${d.surname}`;
+      nationality.textContent = `Nationality: ${d.nationality}`;
+      dob.textContent = `DOB: ${d.dob}`;
     });
   }
 });
