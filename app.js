@@ -93,6 +93,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const driverModal = document.querySelector("#driverModal");
   const dialog = document.querySelector("dialog");
   const closeButton = document.querySelector(".close");
+  const homeViewBtn = document.getElementById("homeViewBtn");
+  const racesViewBtn = document.getElementById("racesViewBtn");
   let viewDriver;
 
   modifyStyle(".lds-roller", "display", "none");
@@ -104,11 +106,13 @@ document.addEventListener("DOMContentLoaded", () => {
     3. Hide loading animation (after promise.all? (not sure)) - done
     4. clean this event listener up
 */
-  // document.addEventListener("click" (e) => {
-  //   if (e.target.nodeName === "A" && e.target.id === "viewDriver") {
-  //     driverModal.showModal();
-  //   }
-  // });
+
+  homeViewBtn.addEventListener("click", () => {
+    homeView.style.display = "none";
+    racesView.style.display = "none";
+    qualifyingTable.style.display = "none";
+    homeView.style.display = "flex";
+  });
 
   homeSection.addEventListener("change", async (e) => {
     if (e.target.nodeName === "SELECT" && e.target.id === "seasonSelect") {

@@ -16,25 +16,37 @@
       </nav>
     </header>
 
-    <!-- Home View -->
-    <section id="homeView">
-      <h2>Welcome to the F1 Dashboard</h2>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae
-        dolores, nulla quia quisquam necessitatibus repellat incidunt quibusdam
-        placeat debitis sint impedit maxime vel excepturi fugit sapiente
-        blanditiis minima rerum veniam!
-      </p>
-      <label for="seasonSelect">Select a Season:</label>
-      <select id="seasonSelect">
-        <option value="2020">2020</option>
-        <option value="2021">2021</option>
-        <option value="2022">2022</option>
-        <option value="2023">2023</option>
-      </select>
-      <img class="car-photo" src="photos/redCar.jpeg" alt="Race Car Photo" />
-      <!-- Link for the photo:https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pexels.com%2Fsearch%2Frace%2520car%2F&psig=AOvVaw2h2F1-S5wPJ3ftQOItNWwe&ust=1733712223306000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCNj2p8CTl4oDFQAAAAAdAAAAABAE -->
-    </section>
+    <div class="main-container">
+      <!-- Left Column -->
+      <section id="homeView">
+        <div class="text-content">
+          <h2>Welcome to the F1 Dashboard</h2>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae
+            dolores, nulla quia quisquam necessitatibus repellat incidunt
+            quibusdam placeat debitis sint impedit maxime vel excepturi fugit
+            sapiente blanditiis minima rerum veniam!
+          </p>
+          <div class="season-select-container">
+            <label for="seasonSelect">Select a Season:</label>
+            <select id="seasonSelect">
+              <option value="2020">2020</option>
+              <option value="2021">2021</option>
+              <option value="2022">2022</option>
+              <option value="2023">2023</option>
+            </select>
+          </div>
+        </div>
+        <div class="image-section">
+          <img
+            class="car-photo"
+            src="photos/redCar.jpeg"
+            alt="Race Car Photo"
+          />
+        </div>
+      </section>
+    </div>
+
     <div class="lds-roller loading">
       <div></div>
       <div></div>
@@ -63,8 +75,6 @@
           </tbody>
         </table>
       </section>
-
-      <!-- style="display: none" -->
 
       <!-- Qualifying Table -->
       <section id="qualifyingTable" style="display: none">
