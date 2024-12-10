@@ -10,7 +10,8 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
       integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
       crossorigin="anonymous"
-      referrerpolicy="no-referrer" />
+      referrerpolicy="no-referrer"
+    />
     <script type="module" src="app.js"></script>
   </head>
   <body>
@@ -19,21 +20,24 @@
       <nav>
         <button id="homeViewBtn">Home</button>
         <a
-        id="racesViewBtn" href="https://github.com/daraakitoyemru/assign2-web2.git"
-          target="_blank">GitHub</a>
+          id="racesViewBtn"
+          href="https://github.com/daraakitoyemru/assign2-web2.git"
+          target="_blank"
+          >GitHub</a
+        >
       </nav>
     </header>
 
     <div class="main-container">
-      <!-- Left Column -->
+      <!-- Home View -->
       <section id="homeView">
         <div class="text-content">
           <h2>Welcome to the F1 Dashboard</h2>
           <p>
             This website was created for Assignment 2 of COMP3512 at Mount Royal
-            University. As apposed to Assignment 1, we used JavaScript to fetch
-            data and used event listeners to change the site dynamically. This
-            site was built using real data from Formula 1 Racing.
+            University. Unlike Assignment 1, we used JavaScript to fetch data
+            and event listeners to dynamically change the site. This site was
+            built using real data from Formula 1 Racing.
           </p>
           <div class="season-select-container">
             <label for="seasonSelect">Select a Season:</label>
@@ -65,81 +69,105 @@
       <div></div>
       <div></div>
     </div>
-
-    <div class="container">
-      <!-- Races View -->
-      <section id="racesView" style="display: none">
-        <h2>Races</h2>
-        <table id="racesTable">
-          <thead>
-            <tr>
-              <th>Round</th>
-              <th>Race Name</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="racesBody">
-            <!-- Race rows will be dynamically added here -->
-          </tbody>
-        </table>
-      </section>
-
-      <section class="raceInfo">
-        <h2>Results for [year][raceName]</h2>
-          <p><strong>Race Name:</strong> [raceName]</p>
-          <p><strong>Round #:</strong> [round]</p>
-          <p><strong>Year:</strong> [year]</p>
-          <p><strong>Circuit Name:</strong> [circuit Name]</p>
-          <p><strong>Date:</strong> [Date]</p>
-          <p><strong>Race URL: </strong> <a href="" target="_blank">More Info</a>
-      </section>
-
-      <!-- Qualifying Table -->
-      <section id="qualifyingTable" style="display: none">
-        <h2>Qualifying Results</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Position</th>
-              <th>Driver</th>
-              <th>Constructor</th>
-              <th>Q1</th>
-              <th>Q2</th>
-              <th>Q3</th>
-            </tr>
-          </thead>
-          <tbody id="#qualBody">
-            <!-- Dynamically add rows -->
-          </tbody>
-        </table>
-      </section>
-    </div>
-    <!-- Top results -->
-    <section class="podium">
-      <div class="podium-container">
-          <div class="podium-item second">
-              <span class="position">2</span>
-              <span
-                  class="driver">first name Last name</span>
-              <span class="points">10 points won</span>
-          </div>
-
-          <div class="podium-item first">
-              <span class="position">1</span>
-              <span
-                  class="driver">Labaowski</span>
-              <span class="points">4 points</span>
-          </div>
-
-          <div class="podium-item third">
-              <span class="position">3</span>
-              <span
-                  class="driver">Kill me</span>
-              <span class="points">1 point</span>
-          </div>
+    <div id="fullContainer">
+      <div class="container">
+        <!-- Races View -->
+        <section id="racesView" style="display: none">
+          <h2>Races</h2>
+          <table id="racesTable">
+            <thead>
+              <tr>
+                <th>Round</th>
+                <th>Race Name</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="racesBody">
+              <!-- Race rows will be dynamically added here -->
+            </tbody>
+          </table>
+        </section>
       </div>
-  </section>
+      <div id="infoAndTables">
+        <div id="infoAndPodium">
+          <section class="raceInfo">
+            <h2>Results for [year][raceName]</h2>
+            <p><strong>Race Name:</strong> [raceName]</p>
+            <p><strong>Round #:</strong> [round]</p>
+            <p><strong>Year:</strong> [year]</p>
+            <p><strong>Circuit Name:</strong> [circuit Name]</p>
+            <p><strong>Date:</strong> [Date]</p>
+            <p>
+              <strong>Race URL:</strong>
+              <a href="#" target="_blank">More Info</a>
+            </p>
+          </section>
 
+          <!-- Podium -->
+          <section class="podium">
+            <div class="podium-container">
+              <div class="podium-item second">
+                <span class="position">2</span>
+                <span class="driver">first name Last name</span>
+                <span class="points">10 points won</span>
+              </div>
+
+              <div class="podium-item first">
+                <span class="position">1</span>
+                <span class="driver">Labaowski</span>
+                <span class="points">4 points</span>
+              </div>
+
+              <div class="podium-item third">
+                <span class="position">3</span>
+                <span class="driver">Kill me</span>
+                <span class="points">1 point</span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div id="bothTables">
+          <!-- Qualifying Table -->
+          <section id="qualifyingTable" style="display: none">
+            <h2>Qualifying Results</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Position</th>
+                  <th>Driver</th>
+                  <th>Constructor</th>
+                  <th>Q1</th>
+                  <th>Q2</th>
+                  <th>Q3</th>
+                </tr>
+              </thead>
+              <tbody id="qualifyingBody">
+                <!-- Dynamically add rows -->
+              </tbody>
+            </table>
+          </section>
+          <!-- Race Results -->
+          <section id="raceResults">
+            <h2>Results</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Position</th>
+                  <th>Driver</th>
+                  <th>Constructor</th>
+                  <th>Laps</th>
+                  <th>Points</th>
+                </tr>
+              </thead>
+              <tbody id="resultsBody">
+                <!-- Dynamically add rows -->
+              </tbody>
+            </table>
+          </section>
+        </div>
+      </div>
+    </div>
     <!-- Modals -->
     <dialog id="favoritesModal">
       <h2>Favorites</h2>
@@ -152,18 +180,21 @@
     <dialog id="driverModal">
       <h2>Driver Details</h2>
       <p id="driverDetails">Details about the driver will appear here.</p>
-     
+
       <div class="container" style="display: none">
         <div class="card profile">
           <img
             src="https://placehold.co/200x200"
             alt="John"
-            style="width: 100%" />
+            style="width: 100%"
+          />
           <h2 class="driverName">FirstName LastName</h2>
           <p class="title nationality">Nationality: Location</p>
           <p class="driverDOB">DOB: YYYY-MM-DD (age: XX)</p>
 
-          <p><button class="contact wiki">Go to Wiki</button></p>
+          <p>
+            <button class="contact wiki">Go to Wiki</button>
+          </p>
         </div>
 
         <div class="card table">
@@ -183,24 +214,15 @@
         </div>
       </div>
       <button id="closeDriver" class="close">Close</button>
-      <div class="lds-roller loading modal">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
     </dialog>
 
     <dialog id="constructorModal">
       <h2>Constructor Details</h2>
-      <div class="container" style="display: none">
+      <div class="container">
         <div class="card profile">
           <h2 class="constructorName">Constructor Name</h2>
           <p class="constructorNationality">Nationality: Location</p>
-          <a class="contact-wiki">Go to Wiki</a>
+          <a class="contact-wiki" href="#" target="_blank">Go to Wiki</a>
         </div>
         <div class="card table">
           <table class="scrollTable">
@@ -219,16 +241,6 @@
         </div>
       </div>
       <button id="closeConstructor" class="close">Close</button>
-      <!-- <div class="lds-roller loading modal"> -->
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
     </dialog>
 
     <dialog id="circuitModal">

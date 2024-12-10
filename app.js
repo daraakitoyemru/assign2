@@ -89,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const raceView = document.querySelector("#racesView");
   const qualifyingTable = document.querySelector("#qualifyingTable");
   const resultsPodium = document.querySelector(".podium");
+  const resultsTable = document.querySelector("#raceResults");
   const raceInfo = document.querySelector(".raceInfo");
   const driverModal = document.querySelector("#driverModal");
   const dialog = document.querySelector("dialog");
@@ -100,6 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
   modifyStyle(".lds-roller", "display", "none");
   raceInfo.style.display = "none";
   resultsPodium.style.display = "none";
+  raceResults.style.display = "none";
 
   /*
   TODO for event listener below:
@@ -115,6 +117,8 @@ document.addEventListener("DOMContentLoaded", () => {
     qualifyingTable.style.display = "none";
     homeView.style.display = "flex";
     raceInfo.style.display = "none";
+    raceResults.style.display = "none";
+    resultsPodium.style.display = "none";
   });
 
   homeSection.addEventListener("change", async (e) => {
@@ -122,7 +126,6 @@ document.addEventListener("DOMContentLoaded", () => {
       modifyStyle(".lds-roller", "display", "block");
       document.querySelector("#racesBody").replaceChildren();
       const year = e.target.value;
-      //fetching and/or populating localStorage
       const localStorageMembers = await Promise.all([
         checkLocalStorage(`raceData${year}`, "races.php?season=" + year),
         checkLocalStorage(`resultData${year}`, "results.php?season=" + year),
@@ -139,7 +142,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       raceViewTitle.textContent = `Races for ${year}`;
 
-      //populating racesBody table
       raceData.forEach((raceObj) => {
         let link = createElement(
           "a",
@@ -160,12 +162,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function populateQualifying(e) {
     document.querySelector("#qualifyingTable tbody").replaceChildren();
-    if (e.target.nodeName === "A") {
+    if (e.target.nodeName === "A" && e.target.id === "viewRace") {
       const year = e.target.dataset.year;
       const raceID = e.target.dataset.id;
 
+      populateRaceInfo(year, raceID);
+      populatePodium(year, raceID);
+
+      function populateRaceInfo(year, raceID) {
+        const raceData = readFromCache(`raceData${year}`);
+        const race = raceData.find((race) => race.id == raceID);
+
+        if (race) {
+          raceInfo.querySelector(
+            "h2"
+          ).textContent = `Results for ${year} - ${race.name}`;
+          raceInfo.querySelector(
+            "p:nth-child(2)"
+          ).innerHTML = `<strong>Race Name:</strong> ${race.name}`;
+          raceInfo.querySelector(
+            "p:nth-child(3)"
+          ).innerHTML = `<strong>Round #:</strong> ${race.round}`;
+          raceInfo.querySelector(
+            "p:nth-child(4)"
+          ).innerHTML = `<strong>Year:</strong> ${year}`;
+          raceInfo.querySelector(
+            "p:nth-child(5)"
+          ).innerHTML = `<strong>Circuit Name:</strong> ${race.circuit.name}`;
+          raceInfo.querySelector(
+            "p:nth-child(6)"
+          ).innerHTML = `<strong>Date:</strong> ${race.date}`;
+          const raceUrl = raceInfo.querySelector("p:nth-child(7) a");
+          raceUrl.href = race.url;
+          raceUrl.textContent = "More Info";
+
+          raceInfo.style.display = "block";
+        }
+      }
+
       let qualifying = readFromCache(`qualifyingData${year}`);
       let matches = qualifying.filter((q) => q.race.id == raceID); // raceID is a string so == is used instead of ===
+      raceInfo.style.display = "block";
+      resultsPodium.style.display = "block";
 
       matches.forEach((matchObj) => {
         const driverAttributes = {
@@ -206,10 +244,41 @@ document.addEventListener("DOMContentLoaded", () => {
       modifyStyle("#qualifyingTable", "display", "block");
     }
   }
+  function populatePodium(year, raceID) {
+    // Read race results from cache
+    const resultsData = readFromCache(`resultData${year}`);
+    const raceResults = resultsData.filter(
+      (result) => result.race.id == raceID
+    );
+
+    if (raceResults.length > 0) {
+      // Sort results by position
+      const sortedResults = raceResults.sort((a, b) => a.position - b.position);
+
+      // Map top 3 racers to podium items
+      const podiumPositions = ["first", "second", "third"];
+      sortedResults.slice(0, 3).forEach((result, index) => {
+        const podiumItem = document.querySelector(
+          `.podium-item.${podiumPositions[index]}`
+        );
+        podiumItem.querySelector(
+          ".driver"
+        ).textContent = `${result.driver.forename} ${result.driver.surname}`;
+        podiumItem.querySelector(
+          ".points"
+        ).textContent = `${result.points} points`;
+      });
+
+      resultsPodium.style.display = "block";
+    } else {
+      console.error("No results found for the selected race.");
+    }
+  }
 
   qualifyingTable.addEventListener("click", async (e) => {
     if (e.target.nodeName === "A" && e.target.id === "viewDriver") {
       const driverRef = e.target.dataset.driverRef;
+      const year = e.target.dataset.raceYear;
       let [driverResultsData, driverInfo] = await Promise.all([
         checkLocalStorage(
           `driverResults${year}`,
@@ -217,11 +286,66 @@ document.addEventListener("DOMContentLoaded", () => {
         ),
         checkLocalStorage(`driverInfo`, `drivers.php?`),
       ]);
-      modifyStyle(".modal", "display", "none");
+      // modifyStyle(".modal", "display", "none");
       modifyStyle("#driverModal .container", "display", "flex");
       populateDriverModal(driverModal, driverRef, year);
     }
   });
+
+  const raceResultsTable = document.querySelector("#raceResults tbody");
+
+  async function populateRaceResults(e) {
+    raceResultsTable.replaceChildren();
+
+    if (e.target.nodeName === "A") {
+      const year = e.target.dataset.year;
+      const raceID = e.target.dataset.id;
+
+      let resultData = readFromCache(`resultData${year}`);
+      let raceResults = resultData.filter((result) => result.race.id == raceID);
+
+      if (raceResults.length > 0) {
+        modifyStyle("#raceResults", "display", "block");
+
+        raceResults.forEach((result) => {
+          const driverLinkAttributes = {
+            href: "#",
+            "data-driver-id": result.driver["id"],
+            "data-driver-ref": result.driver["ref"],
+            id: "viewDriver",
+          };
+          const driverLink = createElement(
+            "a",
+            driverLinkAttributes,
+            `${result.driver.forename} ${result.driver.surname}`
+          );
+
+          const constructorLinkAttributes = {
+            href: "#",
+            "data-constructor-id": result.constructor["id"],
+            "data-constructor-ref": result.constructor["ref"],
+            id: "viewConstructors",
+          };
+          const constructorLink = createElement(
+            "a",
+            constructorLinkAttributes,
+            result.constructor.name
+          );
+
+          addTableRow("#raceResults tbody", result, [
+            "position",
+            driverLink,
+            constructorLink,
+            "laps",
+            "points",
+          ]);
+        });
+      }
+    }
+  }
+
+  // Add event listener to populate Results table
+  raceView.addEventListener("click", populateRaceResults);
 
   /** TODO: create a function that add event listener to all dialog boxes for opening and closing
    * Also make one for populating modal based on different criteria, you'll call this in event listener above
@@ -320,24 +444,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   qualifyingTable.addEventListener("click", async (e) => {
-    if (e.target.nodeName === "A" && e.target.id === "viewConstructors") {
+    if (e.target.matches("a#viewDriver")) {
+      const driverRef = e.target.dataset.driverRef;
+      const year = e.target.dataset.raceYear;
+      const driverResultsData = readFromCache(`driverResults${year}`);
+      const driverInfo = readFromCache("driverInfo");
+
+      const driver = driverInfo.find((data) => data.ref === driverRef);
+      populateDriverModal(driverModal, driver, year);
+    }
+
+    if (e.target.matches("a#viewConstructors")) {
       const constructorRef = e.target.dataset.constructorRef;
       const year = e.target.dataset.raceYear;
 
-      try {
-        let [constructorResultsData, constructorInfo] = await Promise.all([
-          checkLocalStorage(
-            `constructorResults${year}`,
-            `constructorResults.php?constructor=${constructorRef}&season=${year}`
-          ),
-          checkLocalStorage(`constructorInfo`, `constructors.php?`),
-        ]);
+      const constructorInfo = readFromCache("constructorInfo");
+      const constructor = constructorInfo.find(
+        (data) => data.ref === constructorRef
+      );
 
-        modifyStyle(".modal", "display", "none");
-        modifyStyle("#constructorModal .container", "display", "flex");
-
-        populateConstructorModal(constructorModal, constructorRef, year);
-      } catch (error) {}
+      populateConstructorModal(constructorModal, constructor, year);
     }
   });
 

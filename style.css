@@ -110,9 +110,9 @@ nav button:hover {
   background-color: #ff7b1d;
 }
 
-.main-container {
+/* .main-container {
   display: flexbox;
-}
+} */
 
 .text-content {
   background-color: #fff;
@@ -144,12 +144,8 @@ nav button:hover {
   align-items: center;
 }
 
-.container {
-  display: flex;
-}
-
 #racesView {
-  width: 25%;
+  /* width: 25%; */
   margin: 10px;
   background: #fff;
   padding: 10px;
@@ -253,7 +249,7 @@ button:hover {
   background-color: #fff;
   border-radius: 10px;
   padding: 5px;
-  margin: 0;
+  margin: 10px;
   grid-column: 2;
   grid-row: 2;
 }
@@ -318,6 +314,43 @@ button:hover {
   border-radius: 10px;
   height: 280px;
   flex: auto;
+}
+
+#threeDivs {
+  display: flex;
+  flex-direction: row;
+}
+
+#raceResults {
+  background-color: #fff;
+  border-radius: 10px;
+  margin: 10px;
+  padding: 10px;
+  width: 50%;
+}
+
+.tableViews {
+  display: flex;
+}
+
+#infoAndPodium {
+  display: flex;
+  flex-direction: column;
+}
+
+#topDivs {
+  display: flex;
+  flex-direction: row;
+}
+
+#bothTables {
+  display: flex;
+  flex-direction: row;
+}
+
+#fullContainer {
+  display: flex;
+  flex-direction: row;
 }
 
 /* .dialog {
