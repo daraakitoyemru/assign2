@@ -34,27 +34,57 @@ function readFromCache(key) {
  * @param {String} property value of css property
  */
 function modifyStyle(selector, styleType, property) {
-  const element = document.querySelector(selector);
-  element.style[styleType] = property;
+  try {
+    const element = document.querySelector(selector);
+    element.style[styleType] = property;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-/**
- * Takes an object and maps it values so a single table row.
- *
- * @param {String} parentElementSelector css selector for element
- * @param {Object} object object to iterated over
- */
-function addTableRow(parentElementSelector, object) {
+// Utility Functions
+function createElement(htmlTag, attributes = {}, textContent = null) {
+  const element = document.createElement(htmlTag);
+
+  if (Object.keys(attributes).length > 0) {
+    Object.entries(attributes).forEach(([key, value]) => {
+      element.setAttribute(key, value);
+    });
+  }
+
+  if (textContent) {
+    element.textContent = textContent;
+  }
+
+  return element;
+}
+
+function addTableRow(parentElementSelector, object, propArr) {
   const parent = document.querySelector(parentElementSelector);
   const tr = document.createElement("tr");
 
-  Object.values(object).forEach((value) => {
+  propArr.forEach((property) => {
     const td = document.createElement("td");
-    td.textContent = value;
+
+    if (typeof property === "object") {
+      td.appendChild(property);
+    } else if (object.hasOwnProperty(property)) {
+      td.textContent = object[property];
+    }
+
     tr.appendChild(td);
   });
 
   parent.appendChild(tr);
+}
+
+function decodeText(text) {
+  try {
+    return decodeURIComponent(escape(text));
+  } catch (e) {
+    console.error("Failed to decode text:", e);
+    return text; // Fallback to original text if decoding fails
+  }
 }
 
 function getExistingElement(selector, isNodeList = false) {
@@ -71,4 +101,6 @@ export {
   writeToCache,
   readFromCache,
   addTableRow,
+  decodeText,
+  createElement,
 };
