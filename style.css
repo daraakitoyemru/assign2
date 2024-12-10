@@ -214,13 +214,17 @@ tr:hover {
 }
 
 button {
-  background-color: #c43404;
+  background-color: #ff4136;
   color: white;
   border: none;
   padding: 0.5rem 1rem;
   margin: 0.5rem 0;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.raceInfo a {
+  text-decoration: underline;
 }
 
 .contact-wiki,
@@ -236,13 +240,18 @@ button {
   cursor: pointer;
 }
 
+#racesViewBtn {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
 .contact-wiki:hover,
 #racesViewBtn:hover {
   background-color: #ff7b1d;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #ff7b1d;
 }
 
 .podium {
@@ -353,36 +362,16 @@ button:hover {
   flex-direction: row;
 }
 
-/* .dialog {
-  border-radius: 10px;
-}
-
-dialog {
-  border: none;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  width: 60%;
-}
-
-.dialog h2 {
-  margin: 0 0 1rem;
-  font-size: 1.5rem;
-}
-
-.close {
-  background-color: #6c757d;
-  color: white;
-  padding: 0.5rem 1rem;
-  margin-top: 1rem;
-  border-radius: 5px;
-  border: none;
+.logo {
+  width: 50px;
+  height: auto;
   cursor: pointer;
-} */
+}
 
 dialog {
-  width: 60%;
-  max-width: 700px;
+  flex-direction: column;
+  width: 80%;
+  max-width: 1000px;
   margin: auto;
   border: none;
   border-radius: 8px;
@@ -394,7 +383,6 @@ dialog {
   position: relative;
 }
 
-/* Modal Header */
 dialog h2 {
   margin-top: 0;
   font-size: 1.5rem;
@@ -404,7 +392,6 @@ dialog h2 {
   padding-bottom: 10px;
 }
 
-/* Modal Content */
 dialog p,
 dialog .container {
   margin: 20px 0;
@@ -412,9 +399,14 @@ dialog .container {
   line-height: 1.5;
 }
 
-/* Table in Modal */
+dialog .container {
+  justify-content: space-between;
+  gap: 20px;
+}
+
 dialog table {
-  width: 100%;
+  flex: 1; /* Allow the table to take up the remaining space */
+  width: auto; /* Let the table adjust within its container */
   border-collapse: collapse;
   margin-top: 20px;
 }
@@ -422,8 +414,10 @@ dialog table {
 dialog table th,
 dialog table td {
   border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
+  text-align: center;
+  vertical-align: middle;
+  word-wrap: break-word;
+  scrollbar-gutter: stable;
 }
 
 dialog table th {
@@ -431,10 +425,8 @@ dialog table th {
   font-weight: bold;
 }
 
-/* Profile Card */
 .card.profile {
   text-align: center;
-  margin-bottom: 20px;
 }
 
 .card.profile img {
@@ -457,8 +449,22 @@ dialog table th {
   color: #666;
 }
 
-.close:hover {
-  background-color: #5a6268;
+dialog .close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: #ff4136;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  /* margin: 10px; */
+}
+
+dialog .close:hover {
+  background-color: #ff7b1d;
 }
 
 .lds-roller {
@@ -477,8 +483,7 @@ dialog table th {
   height: 6px;
   margin: 2px;
   border-radius: 50%;
-  background: #007bff;
-  animation: lds-roller 1.2s linear infinite;
+  background: #ddd;
 }
 
 @keyframes lds-roller {
@@ -495,12 +500,10 @@ dialog table th {
 
 .scrollTable th,
 .scrollTable td {
-  width: 80px; /* Ensure uniform width */
-  /* Set uniform height */
+  width: 150px;
   text-align: center;
-  max-width: 300px;
   border: 1px solid #e0e0e0;
-  box-sizing: border-box; /* Include padding and borders in width and height */
+  box-sizing: border-box;
 }
 
 .table {
@@ -508,7 +511,7 @@ dialog table th {
 }
 .scrollTable th:first-child,
 .scrollTable td:first-child {
-  width: 80px; /* Match width to ensure alignment */
+  width: 150px;
 }
 .scrollTable thead {
   display: block;
@@ -521,7 +524,6 @@ dialog table th {
 
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  max-width: 300px;
   margin: auto;
   padding: 20px;
   text-align: center;
