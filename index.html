@@ -113,7 +113,6 @@
         <!-- Dynamically populated favorite drivers -->
       </ul>
     </section>
-
     <!-- Constructors Section -->
     <section id="favoriteConstructors">
       <h3>Constructors</h3>
@@ -121,7 +120,6 @@
         <!-- Dynamically populated favorite constructors -->
       </ul>
     </section>
-
     <!-- Circuits Section -->
     <section id="favoriteCircuits">
       <h3>Circuits</h3>
@@ -130,7 +128,6 @@
       </ul>
     </section>
   </div>
-
   <!-- Modal Close Button -->
   <button class="close" id="closeFavoritesModal">Close</button>
 </dialog>
@@ -188,7 +185,42 @@
       <p id="constructorDetails">
         Details about the constructor will appear here.
       </p>
-      <div class="card"></div>
+      <div class="container" style="display: none">
+        <div class="card profile">
+          
+          <h2 class="constructorName">FirstName LastName</h2>
+          <p class="title nationality">Nationality: Location</p>
+          <p><button class="contact wiki">Go to Wiki</button>
+            <button  class="addToFavoritesBtn" > Add to Favorites</button>
+          </p>
+        </div>
+
+        <div class="card table">
+          <table class="scrollTable">
+            <thead>
+              <tr>
+                <th>Round</th>
+                <th>Name</th>
+                <th>Driver</th>
+                <th>Pos</th>
+              </tr>
+            </thead>
+            <tbody id="constructorResultsTable">
+              <!-- Dynamically add rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+     
+      <div class="lds-roller loading modal">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
       <button id="closeConstructor" class="close">Close</button>
     </dialog>
 
