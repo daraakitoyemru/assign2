@@ -186,7 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const raceInfo = document.querySelector(".raceInfo");
   const driverModal = document.querySelector("#driverModal");
   const constructorModal = document.querySelector("#constructorModal");
-  const homeViewBtn = document.getElementById("homeViewBtn");
+  const homeViewBtn = document.querySelector(".logo");
   const addToFavoritesBtn = document.querySelector(".addToFavoritesBtn");
   const seeFavBtn = document.querySelector("#favoritesBtn");
   const favoritesModal = document.querySelector("#favoritesModal");
@@ -265,7 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       populateRaceInfo(year, raceID);
       populatePodium(year, raceID);
-      seeFavBtn.style.display = "flex";
+      seeFavBtn.style.display = "block";
 
       function populateRaceInfo(year, raceID) {
         const raceData = readFromCache(`raceData${year}`);
