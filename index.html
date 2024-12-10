@@ -5,12 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>F1 Dashboard</title>
     <link rel="stylesheet" href="style.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
-      integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.4/css/boxicons.min.css" rel="stylesheet">
+
     <script type="module" src="app.js"></script>
   </head>
   <body>
@@ -34,6 +30,7 @@
             quibusdam placeat debitis sint impedit maxime vel excepturi fugit
             sapiente blanditiis minima rerum veniam!
           </p>
+         
           <div class="season-select-container">
             <label for="seasonSelect">Select a Season:</label>
             <select id="seasonSelect">
@@ -105,13 +102,39 @@
     </div>
 
     <!-- Modals -->
-    <dialog id="favoritesModal">
-      <h2>Favorites</h2>
-      <ul id="favoritesList">
-        <!-- Favorite items go here -->
+    <!-- Favorites Modal -->
+<dialog id="favoritesModal" class="dialog">
+  <h2>Your Favorites</h2>
+  <div id="favoritesContent">
+    <!-- Drivers Section -->
+    <section id="favoriteDrivers">
+      <h3>Drivers</h3>
+      <ul class="favorites-list">
+        <!-- Dynamically populated favorite drivers -->
       </ul>
-      <button id="closeFavorites" class="close">Close</button>
-    </dialog>
+    </section>
+
+    <!-- Constructors Section -->
+    <section id="favoriteConstructors">
+      <h3>Constructors</h3>
+      <ul class="favorites-list">
+        <!-- Dynamically populated favorite constructors -->
+      </ul>
+    </section>
+
+    <!-- Circuits Section -->
+    <section id="favoriteCircuits">
+      <h3>Circuits</h3>
+      <ul class="favorites-list">
+        <!-- Dynamically populated favorite circuits -->
+      </ul>
+    </section>
+  </div>
+
+  <!-- Modal Close Button -->
+  <button class="close" id="closeFavoritesModal">Close</button>
+</dialog>
+
 
     <dialog id="driverModal">
       <h2>Driver Details</h2>

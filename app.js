@@ -146,6 +146,8 @@ document.addEventListener("DOMContentLoaded", () => {
   raceView.addEventListener("click", populateQualifying);
   function populateQualifying(e) {
     document.querySelector("#qualifyingTable tbody").replaceChildren();
+    const favoriteDrivers = readFromCache("favoriteDrivers") || [];
+
     if (e.target.nodeName === "A") {
       const year = e.target.dataset.year;
       const raceID = e.target.dataset.id;
@@ -188,6 +190,20 @@ document.addEventListener("DOMContentLoaded", () => {
           "q2",
           "q3",
         ]);
+
+        if (favoriteDrivers.includes(matchObj.driver["ref"])) {
+          modifyStyle(
+            `a[data-driver-ref="${matchObj.driver["ref"]}"]`,
+            "color",
+            "hotpink"
+          );
+        } else {
+          modifyStyle(
+            `a[data-driver-ref="${matchObj.driver["ref"]}"]`,
+            "color",
+            "black"
+          );
+        }
       });
       modifyStyle("#qualifyingTable", "display", "block");
     }
@@ -206,9 +222,83 @@ document.addEventListener("DOMContentLoaded", () => {
       ]);
       modifyStyle(".modal", "display", "none");
       modifyStyle("#driverModal .container", "display", "flex");
+
       populateDriverModal(driverModal, driverRef, year);
     }
   });
+
+  cardProfile.addEventListener("click", (e) => {
+    if (e.target && e.target.classList.contains("addToFavoritesBtn")) {
+      const button = e.target;
+      const driverRef = button.dataset.driverRef;
+      const favoriteDrivers = readFromCache("favoriteDrivers") || [];
+
+      if (!favoriteDrivers.includes(driverRef)) {
+        favoriteDrivers.push(driverRef);
+        localStorage.setItem(
+          "favoriteDrivers",
+          JSON.stringify(favoriteDrivers)
+        );
+
+        modifyStyle(`a[data-driver-ref="${driverRef}"]`, "color", "hotpink");
+        button.disabled = true;
+        button.dataset.isFav = "true";
+        button.textContent = "Added to Favorites";
+      }
+    }
+  });
+
+  seeFavBtn.addEventListener("click", () => {
+    console.log(favoritesModal + "clicked");
+    populateFavModal("driver");
+  });
+
+  function populateFavModal(type) {
+    const driversList = document.querySelector(
+      "#favoriteDrivers .favorites-list"
+    );
+    driversList.replaceChildren();
+    let data;
+    if (type === "driver") {
+      const favoriteDrivers = readFromCache("favoriteDrivers") || [];
+      const driverInfo = readFromCache("driverInfo") || [];
+
+      data = driverInfo.filter((obj) =>
+        favoriteDrivers.includes(obj["driverRef"])
+      );
+
+      // <i class='bx bxs-trash-alt'></i>
+
+      data.forEach((d) => {
+        const trashIcon = document.createElement("i");
+        trashIcon.classList = "bx bxs-trash-alt";
+
+        const li = document.createElement("li");
+        trashIcon.setAttribute("data-delete-driver-item", d.driverRef);
+        li.textContent = `${d.forename} ${decodeText(d.surname)}`;
+        li.appendChild(trashIcon);
+        driversList.appendChild(li);
+
+        trashIcon.addEventListener("click", (e) => {
+          removeFromFav(e, "driver");
+        });
+      });
+    }
+  }
+
+  function removeFromFav(e, type) {
+    if (type === "driver") {
+      let driverRef = e.target.dataset.deleteDriverItem;
+      e.target.parentElement.style.display = "none";
+      modifyStyle(`a[data-driver-ref="${driverRef}"]`, "color", "black");
+
+      const favoriteDrivers = readFromCache("favoriteDrivers") || [];
+      const updatedFavorites = favoriteDrivers.filter((f) => f !== driverRef);
+
+      // Update localStorage with the new list of favorite drivers
+      localStorage.setItem("favoriteDrivers", JSON.stringify(updatedFavorites));
+    }
+  }
 
   /** TODO: create a function that add event listener to all dialog boxes for opening and closing
    * Also make one for populating modal based on different criteria, you'll call this in event listener above
@@ -228,27 +318,6 @@ document.addEventListener("DOMContentLoaded", () => {
   seeFavBtn.addEventListener("click", () => {
     favoritesModal.showModal();
   });
-
-  cardProfile.addEventListener("click", (e) => {
-    if (e.target && e.target.classList.contains("addToFavoritesBtn")) {
-      const button = e.target;
-      const driverRef = button.dataset.driverRef;
-      const favoriteDrivers = readFromCache("favoriteDrivers") || [];
-
-      if (!favoriteDrivers.includes(driverRef)) {
-        favoriteDrivers.push(driverRef);
-        localStorage.setItem(
-          "favoriteDrivers",
-          JSON.stringify(favoriteDrivers)
-        );
-
-        button.disabled = true;
-        button.dataset.isFav = "true";
-        button.textContent = "Added to Favorites";
-      }
-    }
-  });
-
   /**-------------------------------------- non event listeners ---------------------------- */
 
   function populateDriverModal(modal, ref, year) {

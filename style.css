@@ -352,6 +352,10 @@ a.card:hover {
   opacity: 0.7;
 }
 
+.bxs-trash-alt:hover {
+  color: #c43404;
+}
+
 /* credits for loader : https://loading.io/css/ */
 
 .lds-roller,
