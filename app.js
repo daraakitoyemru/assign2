@@ -317,14 +317,6 @@ document.addEventListener("DOMContentLoaded", () => {
     nationality.textContent = `Nationality: ${data.nationality}`;
     wiki.setAttribute("href", data.url);
     wiki.setAttribute("target", "_blank");
-    // if (data.url) {
-    //   wiki.setAttribute("href", data.url);
-    //   wiki.style.display = "inline";
-    //   console.log(data.url);
-    // } else {
-    //   console.warn("Constructor Wiki URL is missing.");
-    //   wiki.style.display = "none";
-    // }
   }
 
   qualifyingTable.addEventListener("click", async (e) => {
