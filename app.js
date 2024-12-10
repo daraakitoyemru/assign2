@@ -200,6 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
   raceInfo.style.display = "none";
   resultsPodium.style.display = "none";
   raceResults.style.display = "none";
+  seeFavBtn.style.display = "none";
 
   // Home View Navigation
   homeViewBtn.addEventListener("click", () => {
@@ -210,6 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
     raceInfo.style.display = "none";
     raceResults.style.display = "none";
     resultsPodium.style.display = "none";
+    seeFavBtn.style.display = "none";
   });
 
   // Season Selection and Race Data Loading
@@ -263,6 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       populateRaceInfo(year, raceID);
       populatePodium(year, raceID);
+      seeFavBtn.style.display = "flex";
 
       function populateRaceInfo(year, raceID) {
         const raceData = readFromCache(`raceData${year}`);
