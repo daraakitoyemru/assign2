@@ -19,11 +19,8 @@
       <nav>
         <button id="homeViewBtn">Home</button>
         <a
-          href="https://github.com/daraakitoyemru/assign2-web2.git"
-          target="_blank"
-        >
-          <button id="racesViewBtn">GitHub</button>
-        </a>
+        id="racesViewBtn" href="https://github.com/daraakitoyemru/assign2-web2.git"
+          target="_blank">GitHub</a>
       </nav>
     </header>
 
@@ -87,6 +84,16 @@
         </table>
       </section>
 
+      <section class="raceInfo">
+        <h2>Results for [year][raceName]</h2>
+          <p><strong>Race Name:</strong> [raceName]</p>
+          <p><strong>Round #:</strong> [round]</p>
+          <p><strong>Year:</strong> [year]</p>
+          <p><strong>Circuit Name:</strong> [circuit Name]</p>
+          <p><strong>Date:</strong> [Date]</p>
+          <p><strong>Race URL: </strong> <a href="" target="_blank">More Info</a>
+      </section>
+
       <!-- Qualifying Table -->
       <section id="qualifyingTable" style="display: none">
         <h2>Qualifying Results</h2>
@@ -107,6 +114,31 @@
         </table>
       </section>
     </div>
+    <!-- Top results -->
+    <section class="podium">
+      <div class="podium-container">
+          <div class="podium-item second">
+              <span class="position">2</span>
+              <span
+                  class="driver">first name Last name</span>
+              <span class="points">10 points won</span>
+          </div>
+
+          <div class="podium-item first">
+              <span class="position">1</span>
+              <span
+                  class="driver">Labaowski</span>
+              <span class="points">4 points</span>
+          </div>
+
+          <div class="podium-item third">
+              <span class="position">3</span>
+              <span
+                  class="driver">Kill me</span>
+              <span class="points">1 point</span>
+          </div>
+      </div>
+  </section>
 
     <!-- Modals -->
     <dialog id="favoritesModal">
@@ -164,11 +196,39 @@
 
     <dialog id="constructorModal">
       <h2>Constructor Details</h2>
-      <p id="constructorDetails">
-        Details about the constructor will appear here.
-      </p>
-      <div class="card"></div>
+      <div class="container" style="display: none">
+        <div class="card profile">
+          <h2 class="constructorName">Constructor Name</h2>
+          <p class="constructorNationality">Nationality: Location</p>
+          <a class="contact-wiki">Go to Wiki</a>
+        </div>
+        <div class="card table">
+          <table class="scrollTable">
+            <thead>
+              <tr>
+                <th>Rnd</th>
+                <th>Name</th>
+                <th>Driver</th>
+                <th>Pos</th>
+              </tr>
+            </thead>
+            <tbody id="constructorResultsTable">
+              <!-- Dynamically add rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
       <button id="closeConstructor" class="close">Close</button>
+      <!-- <div class="lds-roller loading modal"> -->
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
     </dialog>
 
     <dialog id="circuitModal">

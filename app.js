@@ -88,6 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const raceViewTitle = document.querySelector("#racesView h2");
   const raceView = document.querySelector("#racesView");
   const qualifyingTable = document.querySelector("#qualifyingTable");
+  const resultsPodium = document.querySelector(".podium");
+  const raceInfo = document.querySelector(".raceInfo");
   const driverModal = document.querySelector("#driverModal");
   const dialog = document.querySelector("dialog");
   const closeButton = document.querySelector(".close");
@@ -96,8 +98,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let viewDriver;
   let year;
   modifyStyle(".lds-roller", "display", "none");
-
-  addDialogEventListeners();
+  raceInfo.style.display = "none";
+  resultsPodium.style.display = "none";
 
   /*
   TODO for event listener below:
@@ -112,6 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
     racesView.style.display = "none";
     qualifyingTable.style.display = "none";
     homeView.style.display = "flex";
+    raceInfo.style.display = "none";
   });
 
   homeSection.addEventListener("change", async (e) => {
@@ -278,4 +281,79 @@ document.addEventListener("DOMContentLoaded", () => {
       dob.textContent = `DOB: ${d.dob}`;
     });
   }
+
+  async function populateConstructorModal(modal, ref, year) {
+    modal.showModal();
+
+    const constructorInfo = readFromCache("constructorInfo");
+
+    const constructor = constructorInfo.find(
+      (data) => data.constructorRef === ref
+    );
+
+    populateConstructorCard(constructor);
+
+    let constructorResultsData = readFromCache(`constructorResults${year}`);
+    constructorResultsData.forEach((data) => {
+      const driverName = data.driver
+        ? `${data.driver.forename} ${data.driver.surname}`
+        : "Unknown Driver";
+
+      addTableRow("#constructorResultsTable", data, [
+        "round",
+        "name",
+        driverName,
+        "positionOrder",
+      ]);
+    });
+  }
+
+  function populateConstructorCard(data) {
+    const constructorName = document.querySelector(".constructorName");
+    const nationality = document.querySelector(".constructorNationality");
+    const wiki = document.querySelector(".contact-wiki");
+
+    constructorName.textContent = data.name;
+    nationality.textContent = `Nationality: ${data.nationality}`;
+    wiki.setAttribute("href", data.url);
+    wiki.setAttribute("target", "_blank");
+    // if (data.url) {
+    //   wiki.setAttribute("href", data.url);
+    //   wiki.style.display = "inline";
+    //   console.log(data.url);
+    // } else {
+    //   console.warn("Constructor Wiki URL is missing.");
+    //   wiki.style.display = "none";
+    // }
+  }
+
+  qualifyingTable.addEventListener("click", async (e) => {
+    if (e.target.nodeName === "A" && e.target.id === "viewConstructors") {
+      const constructorRef = e.target.dataset.constructorRef;
+      const year = e.target.dataset.raceYear;
+
+      try {
+        let [constructorResultsData, constructorInfo] = await Promise.all([
+          checkLocalStorage(
+            `constructorResults${year}`,
+            `constructorResults.php?constructor=${constructorRef}&season=${year}`
+          ),
+          checkLocalStorage(`constructorInfo`, `constructors.php?`),
+        ]);
+
+        modifyStyle(".modal", "display", "none");
+        modifyStyle("#constructorModal .container", "display", "flex");
+
+        populateConstructorModal(constructorModal, constructorRef, year);
+      } catch (error) {}
+    }
+  });
+
+  constructorModal.addEventListener("click", (e) => {
+    if (e.target.className === "close") {
+      constructorModal.close();
+    }
+  });
+  const constructorInfo = readFromCache("constructorInfo");
+  console.log("Constructor Info:", constructorInfo);
 });

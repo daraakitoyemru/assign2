@@ -227,11 +227,100 @@ button {
   cursor: pointer;
 }
 
+.contact-wiki,
+#racesViewBtn {
+  margin-top: 10px;
+  text-decoration: none;
+  background-color: #ff4136;
+  color: white;
+  border: none;
+  padding: 8px;
+  margin: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.contact-wiki:hover,
+#racesViewBtn:hover {
+  background-color: #ff7b1d;
+}
+
 button:hover {
   background-color: #0056b3;
 }
 
-.dialog {
+.podium {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 5px;
+  margin: 0;
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.podium-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-top: 10px;
+  gap: 5px;
+}
+
+.podium-item {
+  text-align: center;
+  padding: 10px;
+  border-radius: 10px 10px 0 0;
+  width: 250px;
+  position: relative;
+  margin: 0;
+}
+
+.podium-item.first {
+  background-color: #ffd700;
+  color: #9d3c08;
+  height: 200px;
+}
+
+.podium-item.second {
+  background-color: #c0c0c0;
+  color: #363333;
+  height: 140px;
+}
+
+.podium-item.third {
+  background-color: #cd7f32;
+  color: #442506;
+  height: 100px;
+}
+
+.podium-item .position {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.podium-item .driver {
+  display: block;
+  margin-top: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.podium-item .points {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.9rem;
+}
+
+.raceInfo {
+  background-color: #fff;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
+  height: 280px;
+  flex: auto;
+}
+
+/* .dialog {
   border-radius: 10px;
 }
 
@@ -240,6 +329,7 @@ dialog {
   padding: 2rem;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 60%;
 }
 
 .dialog h2 {
@@ -255,6 +345,83 @@ dialog {
   border-radius: 5px;
   border: none;
   cursor: pointer;
+} */
+
+dialog {
+  width: 60%;
+  max-width: 700px;
+  margin: auto;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+  color: #333;
+  position: relative;
+}
+
+/* Modal Header */
+dialog h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  color: #222;
+  text-align: center;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+}
+
+/* Modal Content */
+dialog p,
+dialog .container {
+  margin: 20px 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Table in Modal */
+dialog table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+dialog table th,
+dialog table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+dialog table th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+
+/* Profile Card */
+.card.profile {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.card.profile img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.card.profile h2 {
+  margin: 10px 0;
+  font-size: 1.25rem;
+  color: #444;
+}
+
+.card.profile p {
+  margin: 5px 0;
+  font-size: 1rem;
+  color: #666;
 }
 
 .close:hover {
