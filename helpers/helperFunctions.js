@@ -57,6 +57,15 @@ function addTableRow(parentElementSelector, object) {
   parent.appendChild(tr);
 }
 
+function decodeText(text) {
+  try {
+    return decodeURIComponent(escape(text));
+  } catch (e) {
+    console.error("Failed to decode text:", e);
+    return text;
+  }
+}
+
 function getExistingElement(selector, isNodeList = false) {
   if (isNodeList) {
     return document.querySelectorAll(selector);
@@ -71,4 +80,5 @@ export {
   writeToCache,
   readFromCache,
   addTableRow,
+  decodeText,
 };

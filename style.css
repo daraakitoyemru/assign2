@@ -231,6 +231,14 @@ button:hover {
   background-color: #0056b3;
 }
 
+/*  */
+button:disabled,
+button[disabled] {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
 .dialog {
   border-radius: 10px;
 }
@@ -319,6 +327,7 @@ dialog {
   overflow: auto;
 }
 
+/* credit: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_profile_card */
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   max-width: 300px;

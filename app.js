@@ -3,6 +3,7 @@ import {
   getExistingElement,
   readFromCache,
   writeToCache,
+  decodeText,
 } from "./helpers/helperFunctions.js";
 
 const domain = "https://www.randyconnolly.com/funwebdev/3rd/api/f1/";
@@ -70,19 +71,6 @@ function addTableRow(parentElementSelector, object, propArr) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  /**
-   * TODO in general:
-   *  - Need to create podium view
-   *  - Create function(s) to populate modals
-   *  - Add event listeners to clickable cells in table and display relevant modals
-   *  - Either make table heading q1,q2, and q3 clickable (can be hard-coded or dynamic using createElement)
-   *    or we could add a dropdown so when the user selects an option, we can sort results based on that.
-   *    We can save that for later.
-   *  - Fix styling, it's not looking so hot rn
-   *  - Bonus if theres time: create and add to favorites view. Saved selected item in a favourites array and
-   *  display in favourites view. Remove from favourites by removing it from the favourites array.
-   */
-
   const homeSection = document.querySelector("#homeView");
   const seasonSelect = document.querySelector("#seasonSelect");
   const raceViewTitle = document.querySelector("#racesView h2");
@@ -92,18 +80,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const dialog = document.querySelector("dialog");
   const closeButton = document.querySelector(".close");
   const homeViewBtn = document.getElementById("homeViewBtn");
+  const addToFavoritesBtn = document.querySelector(".addToFavoritesBtn");
+  const seeFavBtn = document.querySelector("#favoritesBtn");
+  const favoritesModal = document.querySelector("#favoritesModal");
+  const cardProfile = document.querySelector(".profile");
   const racesViewBtn = document.getElementById("racesViewBtn");
+  const FAVORITES_KEYS = {
+    circuits: "favoriteCircuits",
+    drivers: "favoriteDrivers",
+    constructors: "favoriteConstructors",
+  };
+
   let viewDriver;
   let year;
   modifyStyle(".lds-roller", "display", "none");
-
-  /*
-  TODO for event listener below:
-    1. Hide home view on click
-    2. Show loading animation (show before promise.all) - done
-    3. Hide loading animation (after promise.all? (not sure)) - done
-    4. clean this event listener up
-*/
 
   homeViewBtn.addEventListener("click", () => {
     homeView.style.display = "none";
@@ -154,7 +144,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   raceView.addEventListener("click", populateQualifying);
-
   function populateQualifying(e) {
     document.querySelector("#qualifyingTable tbody").replaceChildren();
     if (e.target.nodeName === "A") {
@@ -183,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const driverLink = createElement(
           "a",
           driverAttributes,
-          `${matchObj.driver.forename} ${matchObj.driver.surname}`
+          `${matchObj.driver.forename} ${decodeText(matchObj.driver.surname)}`
         );
         const constructorLink = createElement(
           "a",
@@ -208,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target.nodeName === "A" && e.target.id === "viewDriver") {
       const driverRef = e.target.dataset.driverRef;
       const year = raceViewTitle.dataset.year;
-      let [driverResultsData, driverInfo] = await Promise.all([
+      await Promise.all([
         checkLocalStorage(
           `driverResults${year}`,
           `driverResults.php?driver=${driverRef}&season=${year}`
@@ -230,12 +219,40 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  favoritesModal.addEventListener("click", (e) => {
+    if (e.target.className === "close") {
+      favoritesModal.close();
+    }
+  });
+
+  seeFavBtn.addEventListener("click", () => {
+    favoritesModal.showModal();
+  });
+
+  cardProfile.addEventListener("click", (e) => {
+    if (e.target && e.target.classList.contains("addToFavoritesBtn")) {
+      const button = e.target;
+      const driverRef = button.dataset.driverRef;
+      const favoriteDrivers = readFromCache("favoriteDrivers") || [];
+
+      if (!favoriteDrivers.includes(driverRef)) {
+        favoriteDrivers.push(driverRef);
+        localStorage.setItem(
+          "favoriteDrivers",
+          JSON.stringify(favoriteDrivers)
+        );
+
+        button.disabled = true;
+        button.dataset.isFav = "true";
+        button.textContent = "Added to Favorites";
+      }
+    }
+  });
+
+  /**-------------------------------------- non event listeners ---------------------------- */
+
   function populateDriverModal(modal, ref, year) {
     modal.showModal();
-    /**
-     * use find for getting data from driverResults?driver=ref&season=year
-     *  grab resultID,
-     */
     let driverInfo = readFromCache("driverInfo");
     let driverResultsData = readFromCache(`driverResults${year}`);
 
@@ -265,10 +282,26 @@ document.addEventListener("DOMContentLoaded", () => {
     const nationality = document.querySelector(".nationality");
     const dob = document.querySelector(".driverDOB");
     const url = document.querySelector(".wiki");
+
     data = [data];
 
     data.forEach((d) => {
-      driverName.textContent = `${d.forename} ${d.surname}`;
+      addToFavoritesBtn.setAttribute("data-driver-ref", `${d.driverRef}`);
+      addToFavoritesBtn.setAttribute("data-is-fav", "false");
+
+      // Check if this driver is already in favorites
+      const favoriteDrivers = readFromCache("favoriteDrivers") || [];
+      if (favoriteDrivers.includes(d.driverRef)) {
+        addToFavoritesBtn.disabled = true;
+        addToFavoritesBtn.textContent = "Added to Favorites";
+        addToFavoritesBtn.dataset.isFav = "true";
+      } else {
+        addToFavoritesBtn.disabled = false;
+        addToFavoritesBtn.textContent = "Add to Favorites";
+        addToFavoritesBtn.dataset.isFav = "false";
+      }
+
+      driverName.textContent = `${d.forename} ${decodeText(d.surname)}`;
       nationality.textContent = `Nationality: ${d.nationality}`;
       dob.textContent = `DOB: ${d.dob}`;
       url.addEventListener("click", () => {
