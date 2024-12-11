@@ -7,13 +7,8 @@ import {
   addTableRow,
   setupTableSorting,
 } from "./helpers/helperFunctions.js";
-
+localStorage.clear();
 const DOMAIN = "https://www.randyconnolly.com/funwebdev/3rd/api/f1/";
-const FAVORITES_KEYS = {
-  circuits: "favoriteCircuits",
-  drivers: "favoriteDrivers",
-  constructors: "favoriteConstructors",
-};
 
 // Local Storage Helpers
 async function checkLocalStorage(key, query) {
@@ -77,7 +72,7 @@ function populateFavModal(type, ul, favKey, infoKey, refKey, deleteEventKey) {
     const li = document.createElement("li");
     trashIcon.setAttribute(`data-delete-${type}-item`, item[refKey]);
     console.log(item.name);
-    if (type === "constructor") {
+    if (type === "constructor" || type === "circuit") {
       li.textContent = `${item.name}`;
     } else {
       li.textContent = `${item.forename} ${decodeText(item.surname)}`;
@@ -220,6 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const raceInfo = document.querySelector(".raceInfo");
   const driverModal = document.querySelector("#driverModal");
   const constructorModal = document.querySelector("#constructorModal");
+  const circuitModal = document.querySelector("#circuitModal");
   const homeViewBtn = document.getElementById("homeViewBtn");
 
   const seeFavBtn = document.querySelector("#favoritesBtn");
@@ -233,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
   raceInfo.style.display = "none";
   resultsPodium.style.display = "none";
   raceResults.style.display = "none";
-
+  seasonSelect.value = 0;
   // Home View Navigation
   homeViewBtn.addEventListener("click", () => {
     homeView.style.display = "none";
@@ -248,7 +244,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Season Selection and Race Data Loading
   homeSection.addEventListener("change", async (e) => {
-    if (e.target.nodeName === "SELECT" && e.target.id === "seasonSelect") {
+    if (
+      e.target.nodeName === "SELECT" &&
+      e.target.id === "seasonSelect" &&
+      e.target.value != 0
+    ) {
       modifyStyle(".lds-roller", "display", "block");
       document.querySelector("#racesBody").replaceChildren();
       const year = e.target.value;
@@ -260,6 +260,7 @@ document.addEventListener("DOMContentLoaded", () => {
           `qualifyingData${year}`,
           "qualifying.php?season=" + year
         ),
+        checkLocalStorage(`circuitInfo`, `circuits.php`),
       ]);
 
       modifyStyle(".lds-roller", "display", "none");
@@ -325,7 +326,19 @@ document.addEventListener("DOMContentLoaded", () => {
           ).innerHTML = `<strong>Date:</strong> ${race.date}`;
           const raceUrl = raceInfo.querySelector("p:nth-child(7) a");
           raceUrl.href = race.url;
-          raceUrl.textContent = "More Info";
+          raceUrl.textContent = "Go to Wiki";
+
+          const moreDetails = raceInfo.querySelector("p:nth-child(8)");
+          moreDetails.dataset.circuitRef = `${race.circuit.ref}`;
+          moreDetails.addEventListener("click", (e) => {
+            if (e.target.id === "moreDetails") {
+              const circuitInfo = readFromCache("circuitInfo") || [];
+              let data = circuitInfo.find(
+                (circuit) => circuit.circuitRef == race.circuit.ref
+              );
+              populateCircuitModal(circuitModal, data);
+            }
+          });
 
           raceInfo.style.display = "block";
         }
@@ -336,10 +349,7 @@ document.addEventListener("DOMContentLoaded", () => {
       raceInfo.style.display = "block";
       resultsPodium.style.display = "block";
 
-      console.log(matches + " BIG TEXT");
       matches.forEach((matchObj) => {
-        let test = JSON.stringify(matchObj.driver);
-        console.log(JSON.parse(test) + "  BIG TEXT 2");
         const driverAttributes = {
           "data-driver-id": matchObj.driver["id"],
           "data-driver-ref": matchObj.driver["ref"],
@@ -382,6 +392,7 @@ document.addEventListener("DOMContentLoaded", () => {
       modifyStyle("#qualifyingTable", "display", "block");
     }
   }
+
   function populatePodium(year, raceID) {
     const resultsData = readFromCache(`resultData${year}`);
     const raceResults = resultsData.filter(
@@ -408,6 +419,38 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       console.error("No results found for the selected race.");
     }
+  }
+
+  function populateCircuitModal(modal, data) {
+    modal.showModal();
+    modifyStyle("#circuitModal .container", "display", "flex");
+
+    const [d] = [data];
+    const addToFavoritesBtn = document.querySelector(
+      "#circuitModal .addToFavoritesBtn"
+    );
+
+    document.querySelector("#circuitModal .circuitName").textContent = d.name;
+    addToFavoritesBtn.setAttribute("data-circuit-ref", `${d.circuitRef}`);
+
+    const favoriteCircuits = readFromCache("favoriteCircuits") || [];
+    if (favoriteCircuits.includes(d.circuitRef)) {
+      addToFavoritesBtn.disabled = true;
+      addToFavoritesBtn.textContent = "Added to Favorites";
+      addToFavoritesBtn.dataset.isFav = "true";
+    } else {
+      addToFavoritesBtn.disabled = false;
+      addToFavoritesBtn.textContent = "Add to Favorites";
+      addToFavoritesBtn.dataset.isFav = "false";
+    }
+
+    const location = document.querySelector("#circuitModal .location");
+    location.textContent = `Location: ${d.location}, ${d.country}`;
+
+    const wikiLink = document.querySelector("#circuitModal .wiki");
+    wikiLink.addEventListener("click", () => {
+      window.open(`${d.url}`, "_blank");
+    });
   }
 
   const raceResultsTable = document.querySelector("#raceResults tbody");
@@ -466,7 +509,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function notifyFav(data, type) {
+  function notifyFav(data, type, isCircuit = false) {
     const nodeList = document.querySelectorAll(`a[data-${type}-ref]`);
     nodeList.forEach((a) => {
       const value = `${a.dataset[type + "Ref"]}`;
@@ -485,6 +528,11 @@ document.addEventListener("DOMContentLoaded", () => {
         matchingLinks.forEach((link) => {
           link.style.color = "black";
         });
+
+        if (isCircuit) {
+          const resultTitle = document.querySelector(".raceInfo h2");
+          resultTitle.style.color = "hotpink";
+        }
       }
     });
   }
@@ -585,6 +633,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  const circuitCard = document.querySelector("#circuitModal .container");
+
+  circuitCard.addEventListener("click", (e) => {
+    if (e.target && e.target.classList.contains("addToFavoritesBtn")) {
+      const button = e.target;
+      const circuitRef = button.dataset.circuitRef;
+
+      handleFavorite(
+        circuitRef,
+        "favoriteCircuits",
+        (ref, btn) =>
+          modifyStyle(`h2[data-circuit-ref="${ref}"]`, "color", "hotpink"),
+        button
+      );
+    }
+  });
+
   // Favorites Modal Population
   seeFavBtn.addEventListener("click", () => {
     const driversList = document.querySelector(
@@ -592,6 +657,9 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     const constructorList = document.querySelector(
       "#favoriteConstructors .favorites-list"
+    );
+    const circuitList = document.querySelector(
+      "#favoriteCircuits .favorites-list"
     );
     populateFavModal(
       "driver",
@@ -609,11 +677,16 @@ document.addEventListener("DOMContentLoaded", () => {
       "constructorRef",
       "deleteConstructorItem"
     );
+    populateFavModal(
+      "circuit",
+      circuitList,
+      "favoriteCircuits",
+      "circuitInfo",
+      "circuitRef",
+      "deleteCircuitItem"
+    );
   });
 
-  /** TODO: create a function that add event listener to all dialog boxes for opening and closing
-   * Also make one for populating modal based on different criteria, you'll call this in event listener above
-   */
   driverModal.addEventListener("click", (e) => {
     if (e.target.className === "close") {
       driverModal.close();
@@ -629,6 +702,12 @@ document.addEventListener("DOMContentLoaded", () => {
   constructorModal.addEventListener("click", (e) => {
     if (e.target.className === "close") {
       constructorModal.close();
+    }
+  });
+
+  circuitModal.addEventListener("click", (e) => {
+    if (e.target.className === "close") {
+      circuitModal.close();
     }
   });
 

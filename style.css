@@ -263,11 +263,16 @@ button {
 
 .raceInfo {
   background-color: #fff;
-  padding: 10px;
+  padding: 10px 10px;
   margin: 10px;
   border-radius: 10px;
-  height: 280px;
+  height: 320px;
   flex: auto;
+}
+
+#moreDetails:hover {
+  color: hotpink;
+  cursor: pointer;
 }
 
 #threeDivs {

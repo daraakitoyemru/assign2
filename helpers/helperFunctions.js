@@ -108,7 +108,13 @@ function modifyStyle(selector, styleType, property) {
   }
 }
 
-// Utility Functions
+/**
+ * Creates any valid element with optional attributes and text content
+ * @param {String} htmlTag html tag to be created
+ * @param {Object} attributes (optional) object of key value pairs where the key is that attribute and the value is the value of the attribute
+ * @param {String} textContent (optional) string containing text
+ * @returns
+ */
 function createElement(htmlTag, attributes = {}, textContent = null) {
   const element = document.createElement(htmlTag);
 
@@ -125,6 +131,12 @@ function createElement(htmlTag, attributes = {}, textContent = null) {
   return element;
 }
 
+/**
+ * Adds a row to an existing table
+ * @param {String} parentElementSelector css selector referencing parent element in a table
+ * @param {Object} object data for populating table row
+ * @param {Array} propArr array containing properties to access object values. may contain node elements. must be in order of table headings
+ */
 function addTableRow(parentElementSelector, object, propArr) {
   const parent = document.querySelector(parentElementSelector);
   const tr = document.createElement("tr");
@@ -144,12 +156,13 @@ function addTableRow(parentElementSelector, object, propArr) {
   parent.appendChild(tr);
 }
 
+//fixes garbled text
 function decodeText(text) {
   try {
     return decodeURIComponent(escape(text));
   } catch (e) {
     console.error("Failed to decode text:", e);
-    return text; // Fallback to original text if decoding fails
+    return text;
   }
 }
 

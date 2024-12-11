@@ -100,10 +100,11 @@
             <p><strong>Date:</strong> [Date]</p>
             <p>
               <strong>Race URL:</strong>
-              <a href="#" target="_blank">More Info</a>
+              <a href="#" target="_blank">Go to Wiki</a>
             </p>
+            <p id="moreDetails" data-circuit-ref="">More Details</p>
           </section>
-
+ 
           <!-- Podium -->
           <section class="podium">
             <div class="podium-container">
@@ -247,9 +248,13 @@
       <p id="constructorDetails">
         Details about the constructor will appear here.
       </p>
-      <div class="container" style="display: none">
+      <div class="container" >
         <div class="card profile">
-          
+          <img
+          src="https://placehold.co/200x200"
+          alt="John"
+          style="width: 100%"
+        />
           <h2 class="constructorName">FirstName LastName</h2>
           <p class="title nationality">Nationality: Location</p>
           <p><button class="contact wiki">Go to Wiki</button>
@@ -290,7 +295,26 @@
     <dialog id="circuitModal">
       <h2>Circuit Details</h2>
       <p id="circuitDetails"></p>
+    
+      <div class="container" style="display: none">
+        <div class="card profile">
+          <img
+            src="https://placehold.co/200x200"
+            alt="Circuit Image"
+            style="width: 100%"
+          />
+          <h2 class="circuitName">Circuit Name</h2>
+          <p class="title location">Location: City, Country</p>
+         
+    
+          <p>
+            <button class="contact wiki">Go to Wiki</button>
+            <button class="addToFavoritesBtn">Add to Favorites</button>
+          </p>
+        </div>
+      </div>
       <button id="closeCircuit" class="close">Close</button>
     </dialog>
+    
   </body>
 </html>
