@@ -8,7 +8,7 @@ body {
 
 header {
   background-color: #212529;
-  color: #ff7b1d;
+  color: #fbfafa;
   padding: 20px;
   display: flex;
   justify-content: center;
@@ -47,6 +47,12 @@ nav button:hover {
 /* .main-container {
   display: flexbox;
 } */
+button:disabled,
+button[disabled] {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
 
 .text-content {
   background-color: #fff;
@@ -145,6 +151,10 @@ th {
   font-weight: bold;
 }
 
+th:hover {
+  color: hotpink;
+}
+
 tr:hover {
   background-color: #f1f1f1;
 }
@@ -186,9 +196,9 @@ button {
   background-color: #ff7b1d;
 }
 
-button:hover {
+/* button:hover {
   background-color: #0056b3;
-}
+} */
 
 .podium {
   background-color: #fff;

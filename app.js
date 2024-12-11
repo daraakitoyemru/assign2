@@ -1,11 +1,11 @@
 import {
   modifyStyle,
-  getExistingElement,
   readFromCache,
   writeToCache,
   decodeText,
   createElement,
   addTableRow,
+  setupTableSorting,
 } from "./helpers/helperFunctions.js";
 
 const DOMAIN = "https://www.randyconnolly.com/funwebdev/3rd/api/f1/";
@@ -59,6 +59,40 @@ function removeFromFav(e, type, dataset, key) {
 }
 
 // Modal Population Functions
+
+function populateFavModal(type, ul, favKey, infoKey, refKey, deleteEventKey) {
+  ul.replaceChildren();
+  let data;
+
+  const favorites = readFromCache(favKey) || [];
+  const info = readFromCache(infoKey) || [];
+
+  // Filter data based on favorites
+  data = info.filter((obj) => favorites.includes(obj[refKey]));
+  console.log(data);
+  data.forEach((item) => {
+    const trashIcon = document.createElement("i");
+    trashIcon.classList = "bx bxs-trash-alt";
+
+    const li = document.createElement("li");
+    trashIcon.setAttribute(`data-delete-${type}-item`, item[refKey]);
+    console.log(item.name);
+    if (type === "constructor") {
+      li.textContent = `${item.name}`;
+    } else {
+      li.textContent = `${item.forename} ${decodeText(item.surname)}`;
+    }
+
+    li.appendChild(trashIcon);
+    ul.appendChild(li);
+
+    // Add event listener for trash icon
+    trashIcon.addEventListener("click", (e) => {
+      removeFromFav(e, type, deleteEventKey, favKey);
+    });
+  });
+}
+
 function populateDriverModal(modal, ref, year) {
   modal.showModal();
 
@@ -187,14 +221,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const driverModal = document.querySelector("#driverModal");
   const constructorModal = document.querySelector("#constructorModal");
   const homeViewBtn = document.getElementById("homeViewBtn");
-  const addToFavoritesBtn = document.querySelector(".addToFavoritesBtn");
+
   const seeFavBtn = document.querySelector("#favoritesBtn");
   const favoritesModal = document.querySelector("#favoritesModal");
   const cardProfile = document.querySelector(".profile");
-  const racesViewBtn = document.getElementById("racesViewBtn");
-  const raceTable = document.querySelector("#racesTable");
-  const raceBody = document.querySelector("#racesBody");
+
   const loadingAnimation = document.querySelector(".lds-roller");
+  const raceResultsSection = document.querySelector("#raceResults");
 
   modifyStyle(".lds-roller", "display", "none");
   raceInfo.style.display = "none";
@@ -210,6 +243,7 @@ document.addEventListener("DOMContentLoaded", () => {
     raceInfo.style.display = "none";
     raceResults.style.display = "none";
     resultsPodium.style.display = "none";
+    seasonSelect.value = 0;
   });
 
   // Season Selection and Race Data Loading
@@ -271,10 +305,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (race) {
           raceInfo.querySelector(
             "h2"
-          ).textContent = `Results for ${year} - ${race.name}`;
+          ).textContent = `Results for ${year} - ${decodeText(race.name)}`;
           raceInfo.querySelector(
             "p:nth-child(2)"
-          ).innerHTML = `<strong>Race Name:</strong> ${race.name}`;
+          ).innerHTML = `<strong>Race Name:</strong> ${decodeText(race.name)}`;
           raceInfo.querySelector(
             "p:nth-child(3)"
           ).innerHTML = `<strong>Round #:</strong> ${race.round}`;
@@ -283,7 +317,9 @@ document.addEventListener("DOMContentLoaded", () => {
           ).innerHTML = `<strong>Year:</strong> ${year}`;
           raceInfo.querySelector(
             "p:nth-child(5)"
-          ).innerHTML = `<strong>Circuit Name:</strong> ${race.circuit.name}`;
+          ).innerHTML = `<strong>Circuit Name:</strong> ${decodeText(
+            race.circuit.name
+          )}`;
           raceInfo.querySelector(
             "p:nth-child(6)"
           ).innerHTML = `<strong>Date:</strong> ${race.date}`;
@@ -360,9 +396,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const podiumItem = document.querySelector(
           `.podium-item.${podiumPositions[index]}`
         );
-        podiumItem.querySelector(
-          ".driver"
-        ).textContent = `${result.driver.forename} ${result.driver.surname}`;
+        podiumItem.querySelector(".driver").textContent = `${
+          result.driver.forename
+        } ${decodeText(result.driver.surname)}`;
         podiumItem.querySelector(
           ".points"
         ).textContent = `${result.points} points`;
@@ -378,6 +414,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function populateRaceResults(e) {
     raceResultsTable.replaceChildren();
+    const favoriteDrivers = readFromCache("favoriteDrivers") || [];
+    const favoriteConstructors = readFromCache("favoriteConstructors") || [];
     if (e.target.nodeName === "A") {
       const year = e.target.dataset.year;
       const raceID = e.target.dataset.id;
@@ -393,18 +431,20 @@ document.addEventListener("DOMContentLoaded", () => {
             href: "#",
             "data-driver-id": result.driver["id"],
             "data-driver-ref": result.driver["ref"],
+            "data-race-year": result.race["year"],
             id: "viewDriver",
           };
           const driverLink = createElement(
             "a",
             driverLinkAttributes,
-            `${result.driver.forename} ${result.driver.surname}`
+            `${result.driver.forename} ${decodeText(result.driver.surname)}`
           );
 
           const constructorLinkAttributes = {
             href: "#",
             "data-constructor-id": result.constructor["id"],
             "data-constructor-ref": result.constructor["ref"],
+            "data-race-year": result.race["year"],
             id: "viewConstructors",
           };
           const constructorLink = createElement(
@@ -420,6 +460,8 @@ document.addEventListener("DOMContentLoaded", () => {
             "points",
           ]);
         });
+        notifyFav(favoriteConstructors, "constructor");
+        notifyFav(favoriteDrivers, "driver");
       }
     }
   }
@@ -469,6 +511,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Add event listener to populate Results table
   raceView.addEventListener("click", populateRaceResults);
+
+  raceResultsSection.addEventListener("click", async (e) => {
+    if (e.target.nodeName === "A" && e.target.id === "viewConstructors") {
+      const ref = e.target.dataset.constructorRef;
+      const year = e.target.dataset.raceYear;
+      console.log(year);
+      await Promise.all([
+        checkLocalStorage(
+          `constructorResults${year}`,
+          `constructorResults.php?constructor=${ref}&season=${year}`
+        ),
+        checkLocalStorage(`constructorInfo`, `constructors.php?`),
+      ]);
+
+      modifyStyle(".modal", "display", "none");
+      modifyStyle("#constructorModal .container", "display", "flex");
+      populateConstructorModal(constructorModal, year, ref);
+    }
+  });
 
   // Constructor Modal Event Listeners
   qualifyingTable.addEventListener("click", async (e) => {
@@ -575,4 +636,6 @@ document.addEventListener("DOMContentLoaded", () => {
   seeFavBtn.addEventListener("click", () => {
     favoritesModal.showModal();
   });
+
+  setupTableSorting();
 });

@@ -25,6 +25,72 @@ function readFromCache(key) {
   return data ? JSON.parse(data) : null;
 }
 
+/**
+ * This allow the table contents to be sorted by clicking table headers.
+ * The sorting logic was done using claude ai in interest of time. The display
+ * logic of and event handling were done myself (dara)
+ */
+function setupTableSorting() {
+  const tables = document.querySelectorAll("table");
+
+  tables.forEach((table) => {
+    const headers = table.querySelectorAll("thead th");
+    const upArrow = document.createElement("i");
+    const downArrow = document.createElement("i");
+    upArrow.classList = "bx bx-up-arrow-alt";
+    downArrow.classList = "bx bx-down-arrow-alt";
+
+    headers.forEach((header, index) => {
+      header.style.cursor = "pointer";
+      header.addEventListener("click", () => {
+        const tbody = table.querySelector("tbody");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        const isAscending = header.dataset.sortDirection !== "asc";
+        header.dataset.sortDirection = isAscending ? "asc" : "desc";
+
+        header.innerHTML = header.textContent;
+        if (header.dataset.sortDirection === "asc") {
+          header.appendChild(upArrow);
+          //header.style.display = "inline-flex";
+        } else if (header.dataset.sortDirection === "desc") {
+          header.appendChild(downArrow);
+          //header.style.display = "inline-flex";
+        }
+        // Reset other headers' sort indicators
+        headers.forEach((h) => {
+          if (h !== header) {
+            h.dataset.sortDirection = "default";
+            h.innerHTML = h.textContent;
+          }
+        });
+
+        rows.sort((a, b) => {
+          const cellA = a.querySelectorAll("td")[index].textContent.trim();
+          const cellB = b.querySelectorAll("td")[index].textContent.trim();
+
+          // Try to convert to number for numeric sorting
+          const numA = parseFloat(cellA);
+          const numB = parseFloat(cellB);
+
+          if (!isNaN(numA) && !isNaN(numB)) {
+            return isAscending ? numA - numB : numB - numA;
+          }
+
+          // Fallback to string comparison
+          return isAscending
+            ? cellA.localeCompare(cellB)
+            : cellB.localeCompare(cellA);
+        });
+
+        // Clear and re-append sorted rows
+        tbody.innerHTML = "";
+        rows.forEach((row) => tbody.appendChild(row));
+      });
+    });
+  });
+}
+
 /** ------------------------------------MARKUP HELPER FUNCTION----------------------------- */
 
 /**
@@ -87,20 +153,12 @@ function decodeText(text) {
   }
 }
 
-function getExistingElement(selector, isNodeList = false) {
-  if (isNodeList) {
-    return document.querySelectorAll(selector);
-  } else {
-    return document.querySelector(selector);
-  }
-}
-
 export {
   modifyStyle,
-  getExistingElement,
   writeToCache,
   readFromCache,
   addTableRow,
   decodeText,
   createElement,
+  setupTableSorting,
 };
