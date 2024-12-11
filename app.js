@@ -216,8 +216,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const driverModal = document.querySelector("#driverModal");
   const constructorModal = document.querySelector("#constructorModal");
   const circuitModal = document.querySelector("#circuitModal");
-  const homeViewBtn = document.getElementById("homeViewBtn");
-
+  const homeViewBtn = document.querySelector(".logo");
+  const addToFavoritesBtn = document.querySelector(".addToFavoritesBtn");
   const seeFavBtn = document.querySelector("#favoritesBtn");
   const favoritesModal = document.querySelector("#favoritesModal");
   const cardProfile = document.querySelector(".profile");
@@ -230,6 +230,8 @@ document.addEventListener("DOMContentLoaded", () => {
   resultsPodium.style.display = "none";
   raceResults.style.display = "none";
   seasonSelect.value = 0;
+  seeFavBtn.style.display = "none";
+
   // Home View Navigation
   homeViewBtn.addEventListener("click", () => {
     homeView.style.display = "none";
@@ -240,6 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
     raceResults.style.display = "none";
     resultsPodium.style.display = "none";
     seasonSelect.value = 0;
+    seeFavBtn.style.display = "none";
   });
 
   // Season Selection and Race Data Loading
@@ -298,6 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       populateRaceInfo(year, raceID);
       populatePodium(year, raceID);
+      seeFavBtn.style.display = "block";
 
       function populateRaceInfo(year, raceID) {
         const raceData = readFromCache(`raceData${year}`);
