@@ -24,5 +24,5 @@ The F1 Dashboard is a dynamic, single-page application that displays and interac
 ## Technologies Used
 
 - **HTML:** Single `index.html` file with views dynamically managed via JavaScript.
-- **CSS:** Custom styles with optional integration of Tailwind CSS for better visuals.
-- **JavaScript:** Vanilla JavaScript for all dynamic behaviours (no third-party libraries like jQuery or Bootstrap JS).
+- **CSS:** Custom styles with little to no use of CSS libraries or frameworks.
+- **JavaScript:** Vanilla JavaScript for all dynamic behaviours.
