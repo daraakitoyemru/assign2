@@ -458,6 +458,24 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const raceResultsTable = document.querySelector("#raceResults tbody");
+  raceResultsTable.addEventListener("click", async (e) => {
+    if (e.target.nodeName === "A" && e.target.id === "viewDriver") {
+      const driverRef = e.target.dataset.driverRef;
+      const year = raceViewTitle.dataset.year;
+
+      await Promise.all([
+        checkLocalStorage(
+          `driverResults${year}`,
+          `driverResults.php?driver=${driverRef}&season=${year}`
+        ),
+        checkLocalStorage(`driverInfo`, `drivers.php?`),
+      ]);
+
+      modifyStyle(".modal", "display", "none");
+      modifyStyle("#driverModal .container", "display", "flex");
+      populateDriverModal(driverModal, driverRef, year);
+    }
+  });
 
   async function populateRaceResults(e) {
     raceResultsTable.replaceChildren();
@@ -466,7 +484,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target.nodeName === "A") {
       const year = e.target.dataset.year;
       const raceID = e.target.dataset.id;
-
+      console.log(e.target + "heyyy");
       let resultData = readFromCache(`resultData${year}`);
       let raceResults = resultData.filter((result) => result.race.id == raceID);
 
@@ -647,8 +665,7 @@ document.addEventListener("DOMContentLoaded", () => {
       handleFavorite(
         circuitRef,
         "favoriteCircuits",
-        (ref, btn) =>
-          modifyStyle(`h2[data-circuit-ref="${ref}"]`, "color", "hotpink"),
+        (ref, btn) => modifyStyle(`h2`, "color", "hotpink"),
         button
       );
     }
