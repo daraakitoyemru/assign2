@@ -234,6 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Home View Navigation
   homeViewBtn.addEventListener("click", () => {
+    console.log("hello");
     homeView.style.display = "none";
     racesView.style.display = "none";
     qualifyingTable.style.display = "none";
