@@ -7,7 +7,7 @@ import {
   addTableRow,
   setupTableSorting,
 } from "./helpers/helperFunctions.js";
-localStorage.clear();
+
 const DOMAIN = "https://www.randyconnolly.com/funwebdev/3rd/api/f1/";
 
 // Local Storage Helpers
